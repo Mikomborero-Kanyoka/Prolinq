@@ -1,0 +1,480 @@
+/* Sidebar Premium Styles - Enhanced */
+/* These styles complement the Tailwind classes in Sidebar.jsx */
+
+/* Navigation scrollable area */
+nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+}
+
+/* Smooth scrollbar for navigation */
+.sidebar-nav::-webkit-scrollbar,
+nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track,
+nav::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.05), transparent);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb,
+nav::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover,
+nav::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.5), rgba(168, 85, 247, 0.5));
+}
+
+/* Dark mode scrollbar - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-nav::-webkit-scrollbar-track,
+.dark nav::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.1), transparent);
+}
+
+.dark .sidebar-nav::-webkit-scrollbar-thumb,
+.dark nav::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .sidebar-nav::-webkit-scrollbar-thumb:hover,
+.dark nav::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.6), rgba(168, 85, 247, 0.6));
+} */
+
+/* Enhanced nav item animations - target specific sidebar links */
+.sidebar-link {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sidebar-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.7s ease;
+  z-index: 1;
+}
+
+.sidebar-link:hover::before {
+  left: 100%;
+}
+
+/* Dark mode hover effect - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-link::before {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+} */
+
+/* Gradient border effect for active items */
+.sidebar-link[class*="bg-gradient-to-r"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.8), 
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.8)
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  animation: shimmer 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Badge animations */
+.sidebar-link[class*="bg-gradient-to-r"] .text-xs:not([class*="text-white"]) {
+  animation: badge-pulse 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6);
+  }
+}
+
+/* Minimize button enhancements */
+.sidebar-minimize-btn {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-minimize-btn:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 
+    0 4px 20px rgba(99, 102, 241, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Dark mode minimize button - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-minimize-btn {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .sidebar-minimize-btn:hover {
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 
+    0 4px 20px rgba(99, 102, 241, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+} */
+
+/* Sidebar glass effect enhancement */
+.sidebar-container {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.90) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  backdrop-filter: saturate(200%) blur(20px);
+  box-shadow: 
+    20px 0 40px rgba(0, 0, 0, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Top positioning handled by Tailwind classes (top-20) */
+  left: 0;
+  bottom: 0;
+  height: calc(100vh - 5rem);
+}
+
+/* Dark mode sidebar - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-container {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 24, 39, 0.95) 0%,
+    rgba(31, 41, 55, 0.90) 50%,
+    rgba(55, 65, 81, 0.85) 100%
+  );
+  box-shadow: 
+    20px 0 40px rgba(0, 0, 0, 0.3),
+    inset 1px 0 0 rgba(255, 255, 255, 0.1);
+} */
+
+/* Active state glow effect for different colors */
+.sidebar-link[class*="from-blue-500"] {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.sidebar-link[class*="from-emerald-500"] {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.sidebar-link[class*="from-purple-500"] {
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+}
+
+.sidebar-link[class*="from-orange-500"] {
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+}
+
+.sidebar-link[class*="from-rose-500"] {
+  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.4);
+}
+
+.sidebar-link[class*="from-indigo-500"] {
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+/* Icon 3D hover effects */
+.sidebar-link:not([class*="bg-gradient-to-r"]):hover svg {
+  filter: 
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))
+    drop-shadow(0 4px 8px rgba(99, 102, 241, 0.2));
+  transform: translateY(-1px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile overlay enhancement */
+.sidebar-overlay {
+  backdrop-filter: blur(8px);
+  animation: overlay-fade 0.5s ease-out;
+}
+
+@keyframes overlay-fade {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Performance optimizations */
+.sidebar-link,
+.sidebar-minimize-btn,
+.sidebar-container {
+  will-change: transform, background-color, box-shadow;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Enhanced focus states with glow */
+.sidebar-link:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.3),
+    0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.sidebar-minimize-btn:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.3),
+    0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Minimized sidebar specific styles */
+.sidebar-container.minimized {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 50%,
+    rgba(241, 245, 249, 0.98) 100%
+  );
+  box-shadow: 
+    20px 0 40px rgba(0, 0, 0, 0.06),
+    inset 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Dark mode minimized sidebar - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-container.minimized {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 24, 39, 0.98) 0%,
+    rgba(31, 41, 55, 0.98) 50%,
+    rgba(55, 65, 81, 0.98) 100%
+  );
+  box-shadow: 
+    20px 0 40px rgba(0, 0, 0, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.1);
+} */
+
+/* Tooltip styles for minimized state */
+.sidebar-tooltip {
+  animation: tooltip-fade 0.2s ease-out;
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.sidebar-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent #1f2937 transparent transparent;
+}
+
+@keyframes tooltip-fade {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Active indicator animation */
+.sidebar-active-indicator {
+  animation: indicator-slide 0.3s ease-out;
+}
+
+@keyframes indicator-slide {
+  from {
+    transform: translateX(-10px) translateY(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) translateY(-50%);
+    opacity: 1;
+  }
+}
+
+/* Gradient border for divider */
+.sidebar-divider .border-t {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.1),
+    rgba(168, 85, 247, 0.1),
+    rgba(99, 102, 241, 0.1),
+    transparent
+  );
+}
+
+/* Dark mode divider - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-divider .border-t {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.2),
+    rgba(168, 85, 247, 0.2),
+    rgba(99, 102, 241, 0.2),
+    transparent
+  );
+} */
+
+/* User profile image glow */
+.sidebar-profile-glow {
+  animation: profile-glow 3s ease-in-out infinite;
+}
+
+@keyframes profile-glow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Icon background glow animation */
+.sidebar-icon-glow {
+  animation: icon-glow 2s ease-in-out infinite;
+}
+
+@keyframes icon-glow {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Smooth sidebar transitions */
+.sidebar-container {
+  transition: 
+    width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer section glass effect */
+.sidebar-footer {
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.9) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Dark mode footer - DISABLED for sidebar to keep it light */
+/* .dark .sidebar-footer {
+  background: linear-gradient(
+    135deg,
+    rgba(31, 41, 55, 0.9) 0%,
+    rgba(17, 24, 39, 0.85) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+} */
+
+/* Pulse animation for badges on hover */
+.sidebar-link:hover .text-xs[class*="bg-gradient-to-r"] {
+  animation: badge-bounce 0.5s ease;
+}
+
+@keyframes badge-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Sidebar toggle button styles */
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #6366f1;
+}
+
+.sidebar-toggle-btn:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.sidebar-toggle-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+.sidebar-toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover .sidebar-toggle-icon {
+  transform: scale(1.1);
+}

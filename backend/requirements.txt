@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+pydantic
+pydantic-settings
+PyJWT
+python-multipart
+aiofiles
+alembic
+Pillow
+sentence-transformers
+scikit-learn
+numpy
+python-socketio
+APScheduler

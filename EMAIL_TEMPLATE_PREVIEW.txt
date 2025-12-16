@@ -1,0 +1,207 @@
+================================================================================
+                    PERSONALIZED JOB RECOMMENDATIONS EMAIL
+                          FINAL STYLED VERSION
+================================================================================
+
+Subject: 🔥 Your Daily Job Recommendations - Personalized For You
+
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 YOUR PERSONALIZED JOB RECOMMENDATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Hi John Doe!
+
+Great news! We found 5 perfect opportunities that match your skills and experience.
+
+
+📌 Job #1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: Senior Python Developer
+Company: TechCorp Inc
+Location: Remote
+
+👉 View & Apply: https://prolinq.app/jobs/123
+
+
+📌 Job #2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: Full Stack Engineer
+Company: StartupXYZ
+Location: San Francisco, CA
+
+👉 View & Apply: https://prolinq.app/jobs/124
+
+
+📌 Job #3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: React Frontend Developer
+Company: CloudSystems
+Location: New York, NY
+
+👉 View & Apply: https://prolinq.app/jobs/125
+
+
+📌 Job #4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: DevOps Engineer
+Company: Enterprise Solutions Ltd
+Location: Boston, MA
+
+👉 View & Apply: https://prolinq.app/jobs/126
+
+
+📌 Job #5
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Position: Machine Learning Engineer
+Company: AI Innovations
+Location: Austin, TX
+
+👉 View & Apply: https://prolinq.app/jobs/127
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💼 FEATURED OPPORTUNITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Advertise Your Hiring!
+
+Reach 10,000+ top tech talent on Prolinq. Featured ad placements get 3x more
+visibility. Premium employers see a 45% increase in quality applications.
+
+👉 Learn More: https://prolinq.app/advertise
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ Why These Jobs?
+These positions were selected because they align with your skills and experience 
+level. We've analyzed thousands of jobs to bring you the best matches.
+
+💡 Next Steps:
+1. Review each opportunity
+2. Click to view full job details
+3. Apply if interested (takes 30 seconds!)
+4. Our team will help guide you through the process
+
+Questions? Feel free to reply to this email - we read every message!
+
+Wishing you success in your job search! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+— The Prolinq Matching Engine
+— Smarter Job Matching For Everyone
+
+---
+This is an automated personalized message. Please don't reply with sensitive information.
+To update your preferences, visit: https://prolinq.app/settings/notifications
+
+================================================================================
+                              KEY FEATURES
+================================================================================
+
+✅ Professional Styling
+   - Clean visual separators using box-drawing characters
+   - Emoji indicators for easy scanning
+   - Clear section hierarchy
+
+✅ Job Information
+   - Position title
+   - Company name
+   - Location
+   - Direct apply link
+   - Numbered listings for clarity
+
+✅ Ad Placement
+   - Positioned below all job recommendations
+   - Prominent "FEATURED OPPORTUNITY" header
+   - Clear call-to-action button
+   - Tracked impression automatically
+
+✅ Personalization
+   - User's name in greeting
+   - Custom job count ("5 opportunities" vs "1 opportunity")
+   - Personalized recommendation explanation
+
+✅ Engagement Elements
+   - Friendly greeting
+   - Explanation of why jobs were selected
+   - Clear next steps (4-step guide)
+   - Encouragement to reply for questions
+   - Success messaging and emojis
+
+✅ Fair Ad Distribution
+   - Each user gets different random ads
+   - No user left without an ad
+   - Impression tracking for analytics
+
+================================================================================
+                              CONFIGURATION
+================================================================================
+
+Template Parameters:
+- user_name: Full name or username of recipient
+- jobs: List of job dicts with:
+  * title: Job position title
+  * company: Company name
+  * location: Job location
+  * job_id: Database ID for link generation
+  * link: Full URL to job posting
+- ad: (Optional) Ad dict with:
+  * title: Ad headline
+  * text: Ad body copy
+  * link: URL for ad link
+  * id: Ad database ID
+
+Email Features:
+- Text-only format (works everywhere)
+- Mobile-friendly line lengths
+- Easy to read without formatting issues
+- Compatible with all email clients
+
+Queue System:
+- Emails are automatically queued
+- Throttled based on configured limits
+- Background scheduler processes them
+- Impression tracking on queueing
+
+================================================================================
+                            TESTING WORKFLOW
+================================================================================
+
+1. Get Users List:
+   GET /api/email/test-email/users
+
+2. Send to User:
+   POST /api/email/test-email/send-recommendations/1
+   
+3. Check Queue:
+   GET /api/email/queue/status
+
+4. Monitor Email:
+   Check admin dashboard Email Management > Queue
+
+5. Verify Delivery:
+   Check recipient's inbox (may be throttled)
+
+================================================================================
+                         AD SHUFFLING LOGIC
+================================================================================
+
+When an email is queued:
+
+1. Query all active ads from database
+2. Randomly select one using random.choice()
+3. Format ad into email template
+4. Increment impressions counter (+1)
+5. Commit to database
+
+Result: Each user sees a random ad, fairly distributed across all active ads.
+
+Example Distribution (10 users, 3 ads):
+- Ad 1: 4 impressions
+- Ad 2: 3 impressions  
+- Ad 3: 3 impressions
+
+(Fair distribution - no ad monopolizes visibility)
+
+================================================================================

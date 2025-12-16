@@ -1,0 +1,501 @@
+/* TalentCard Custom Styles */
+
+/* Cover image responsive sizing */
+.talent-card .cover-image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 60px;
+  max-height: 120px;
+  overflow: hidden;
+}
+
+.talent-card .cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  resize: both;
+  overflow: auto;
+  min-height: 60px;
+  max-height: 120px;
+  transition: transform 0.5s ease;
+}
+
+.talent-card:hover .cover-image {
+  transform: scale(1.05);
+}
+
+/* Ensure cover image maintains aspect ratio while being resizable */
+.talent-card .cover-image-container img {
+  aspect-ratio: auto;
+  width: 100%;
+  height: auto;
+  min-height: 60px;
+  max-height: 120px;
+}
+
+/* Card animations and hover effects */
+.talent-card {
+  transform-origin: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 320px;
+}
+
+.talent-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Profile image glow effect */
+.talent-card .group:hover .relative img {
+  filter: brightness(1.05);
+}
+
+/* Star rating animation */
+.talent-card .star-rating {
+  transition: all 0.2s ease;
+}
+
+.talent-card .star-rating:hover {
+  transform: scale(1.1);
+}
+
+/* Skill tag hover effects */
+.talent-card .skill-tag {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.talent-card .skill-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+}
+
+/* Button hover effects */
+.talent-card .btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.talent-card .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.talent-card .btn-primary:hover::before {
+  left: 100%;
+}
+
+/* Online indicator pulse */
+.talent-card .online-indicator {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* Cover image overlay gradient */
+.talent-card .cover-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* Smooth transitions for all interactive elements */
+.talent-card * {
+  transition-duration: 200ms;
+}
+
+/* Enhanced shadow on hover */
+.talent-card:hover {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(59, 130, 246, 0.05);
+}
+
+/* Profile image border glow */
+.talent-card .profile-image-glow {
+  transition: all 0.3s ease;
+}
+
+.talent-card:hover .profile-image-glow {
+  opacity: 0.6;
+  transform: scale(1.1);
+}
+
+/* Availability badge animation */
+.talent-card .availability-badge {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Portfolio link hover effect */
+.talent-card .portfolio-link {
+  position: relative;
+}
+
+.talent-card .portfolio-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+.talent-card .portfolio-link:hover::after {
+  width: 100%;
+}
+
+/* Custom scrollbar for skill overflow */
+.talent-card .skills-container {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.talent-card .skills-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.talent-card .skills-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.talent-card .skills-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.talent-card .skills-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Loading skeleton animation */
+.talent-card.loading {
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #f3f4f6;
+  }
+  50% {
+    background-color: #e5e7eb;
+  }
+  100% {
+    background-color: #f3f4f6;
+  }
+}
+
+/* Ensure card content grows properly */
+.talent-card .relative {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.talent-buttons {
+  margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .talent-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .talent-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .talent-name {
+    font-size: 1.125rem;
+  }
+  
+  .talent-title {
+    font-size: 0.875rem;
+  }
+  
+  .skill-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .talent-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-view-profile, .btn-contact {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .talent-card {
+    padding: 0.875rem;
+  }
+  
+  .talent-name {
+    font-size: 1rem;
+  }
+  
+  .talent-title {
+    font-size: 0.8rem;
+  }
+  
+  .skill-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* Focus states for accessibility */
+.talent-card:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.talent-card .btn-primary:focus,
+.talent-card .btn-secondary:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .talent-card {
+    background: #1f2937;
+    border-color: #374151;
+  }
+}
+
+/* Enhanced Dark Mode for Manual Toggle */
+.dark .talent-card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-color: #475569;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.dark .talent-card:hover {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  border-color: #64748b;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(96, 165, 250, 0.1);
+}
+
+.dark .talent-name {
+  color: #f1f5f9;
+}
+
+.dark .talent-title {
+  color: #cbd5e1;
+}
+
+.dark .talent-bio {
+  color: #94a3b8;
+}
+
+.dark .skill-tag {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.dark .skill-tag:hover {
+  background: rgba(59, 130, 246, 0.3);
+  color: #dbeafe;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.25);
+}
+
+.dark .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  border-color: transparent;
+}
+
+.dark .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.dark .btn-secondary {
+  background: rgba(30, 41, 59, 0.8);
+  color: #e2e8f0;
+  border-color: rgba(71, 85, 105, 0.6);
+}
+
+.dark .btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #f1f5f9;
+  border-color: rgba(100, 116, 139, 0.8);
+}
+
+.dark .portfolio-link {
+  color: #60a5fa;
+}
+
+.dark .portfolio-link:hover {
+  color: #93c5fd;
+}
+
+.dark .portfolio-link::after {
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+}
+
+.dark .availability-badge {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.dark .availability-badge.unavailable {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.dark .star-rating {
+  color: #fbbf24;
+}
+
+.dark .skills-container {
+  scrollbar-color: #475569 #1e293b;
+}
+
+.dark .skills-container::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark .skills-container::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .skills-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark .cover-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* Dark mode loading skeleton */
+.dark .talent-card.loading {
+  animation: skeleton-loading-dark 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-loading-dark {
+  0% {
+    background-color: #334155;
+  }
+  50% {
+    background-color: #475569;
+  }
+  100% {
+    background-color: #334155;
+  }
+}
+
+/* Dark mode focus states */
+.dark .talent-card:focus-within {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.dark .talent-card .btn-primary:focus,
+.dark .talent-card .btn-secondary:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Dark mode profile image adjustments */
+.dark .talent-card .profile-image-glow {
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.dark .talent-card:hover .profile-image-glow {
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+/* Dark mode responsive adjustments */
+@media (max-width: 768px) {
+  .dark .talent-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+  
+  .dark .talent-card:hover {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  }
+}
+
+/* Dark mode online indicator adjustments */
+.dark .talent-card .online-indicator {
+  background-color: #22c55e;
+  box-shadow: 0 0 0 2px #1e293b;
+}
+
+/* Dark mode button shimmer effect */
+.dark .talent-card .btn-primary::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* Dark mode card shadow enhancements */
+.dark .talent-card {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .talent-card:hover {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(96, 165, 250, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
