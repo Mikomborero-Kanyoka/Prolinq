@@ -18,17 +18,37 @@ from scheduler import start_scheduler, stop_scheduler
 
 load_dotenv()
 
+# Get environment variables
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
 # Create tables
 Base.metadata.create_all(bind=engine)
+
+# Configure CORS origins based on environment
+if ENVIRONMENT == "production":
+    cors_origins = [FRONTEND_URL]
+else:
+    cors_origins = [
+        "http://localhost:5173", 
+        "http://localhost:3000", 
+        "http://192.168.100.130:3000", 
+        "http://192.168.100.130:5173",
+        FRONTEND_URL
+    ]
 
 # Create Socket.IO app
 sio = socketio.AsyncServer(
     async_mode='asgi',
-    cors_allowed_origins=["http://localhost:5173", "http://localhost:3000", "http://192.168.100.130:3000", "http://192.168.100.130:5173"],
+    cors_allowed_origins=cors_origins,
     cors_credentials=True
 )
 
-app = FastAPI(title="Prolinq API", version="1.0.0")
+app = FastAPI(
+    title="Prolinq API", 
+    version="1.0.0",
+    description="API for Prolinq job matching platform"
+)
 
 # Mount uploads directory for serving static files
 uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
@@ -38,7 +58,7 @@ app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://192.168.100.130:3000", "http://192.168.100.130:5173", "*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

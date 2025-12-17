@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 python-dotenv
 pydantic
@@ -12,5 +12,6 @@ Pillow
 sentence-transformers
 scikit-learn
 numpy
-python-socketio
+python-socketio[asyncio_client]
 APScheduler
+psycopg2-binary
