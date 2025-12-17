@@ -165,4 +165,5 @@ app.state.sio = sio
 if __name__ == "__main__":
     import uvicorn
     # Use the Socket.IO ASGI app
-    uvicorn.run(socket_app, host="0.0.0.0", port=8001, reload=True)
+    port = int(os.getenv("PORT", 3000))
+    uvicorn.run(socket_app, host="0.0.0.0", port=port, reload=True)
