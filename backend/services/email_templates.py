@@ -65,6 +65,35 @@ This is an automated message from Prolinq. Please don't reply with sensitive inf
         
         job_word = "opportunity" if len(jobs) == 1 else "opportunities"
         
+        # Build job cards separately to avoid f-string nesting issues
+        job_cards_html = ""
+        for idx, job in enumerate(jobs, 1):
+            job_link = job.get('link', f"https://prolinq.app/jobs/{job.get('job_id', '')}")
+            job_cards_html += f"""
+            <div class="job-card">
+                <div class="job-number">{idx}</div>
+                <div class="job-title">{job.get('title', 'Job Title')}</div>
+                <div class="job-company">{job.get('company', 'Company')}</div>
+                <div class="job-location">Location: {job.get('location', 'Remote')}</div>
+                <a href="{job_link}" class="apply-button">
+                    View & Apply -&gt;
+                </a>
+            </div>
+            """
+        
+        # Build ad section if present
+        ad_html = ""
+        if ad:
+            ad_html = f"""
+            <div class="ad-section">
+                <div class="ad-title">{ad.get('title', 'Featured Opportunity')}</div>
+                <div class="ad-text">{ad.get('text', 'Discover amazing opportunities tailored for you!')}</div>
+                <a href="{ad.get('link', 'https://prolinq.app')}" class="ad-button">
+                    Learn More -&gt;
+                </a>
+            </div>
+            """
+        
         # HTML email with Prolinq theme colors
         html_content = f"""
 <!DOCTYPE html>
@@ -288,28 +317,10 @@ This is an automated message from Prolinq. Please don't reply with sensitive inf
             </p>
             
             <!-- Job Listings -->
-            {"".join([f"""
-            <div class="job-card">
-                <div class="job-number">{idx}</div>
-                <div class="job-title">{job.get('title', 'Job Title')}</div>
-                <div class="job-company">{job.get('company', 'Company')}</div>
-                <div class="job-location">Location: {job.get('location', 'Remote')}</div>
-                <a href="{job.get('link', f'https://prolinq.app/jobs/{job.get("job_id", "")}')}" class="apply-button">
-                    View & Apply →
-                </a>
-            </div>
-            """ for idx, job in enumerate(jobs, 1)])}
+            {job_cards_html}
             
             <!-- Advertisement Section -->
-            {f"""
-            <div class="ad-section">
-                <div class="ad-title">{ad.get('title', 'Featured Opportunity')}</div>
-                <div class="ad-text">{ad.get('text', 'Discover amazing opportunities tailored for you!')}</div>
-                <a href="{ad.get('link', 'https://prolinq.app')}" class="ad-button">
-                    Learn More -&gt;
-                </a>
-            </div>
-            """ if ad else ""}
+            {ad_html}
             
             <!-- Why These Jobs Section -->
             <div class="why-section">
