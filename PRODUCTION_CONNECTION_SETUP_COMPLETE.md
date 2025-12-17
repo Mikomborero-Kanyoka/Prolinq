@@ -3,7 +3,7 @@
 ## ✅ Configuration Summary
 
 ### Frontend Configuration
-- **Frontend URL**: https://prolinq-ptq24wy0c-mikomborero-kanyokas-projects.vercel.app
+- **Frontend URL**: https://prolinq.vercel.app
 - **Backend API URL**: https://prolinq-production.up.railway.app/api
 - **Admin API URL**: https://prolinq-production.up.railway.app
 
@@ -15,7 +15,7 @@ VITE_ADMIN_API_URL=https://prolinq-production.up.railway.app
 
 ### Backend CORS Configuration
 The backend is configured to allow requests from:
-- https://prolinq-git-main-mikomborero-kanyokas-projects.vercel.app
+- https://prolinq.vercel.app
 - Dynamic FRONTEND_URL environment variable
 - Local development URLs for testing
 
@@ -147,7 +147,7 @@ VITE_ADMIN_API_URL=https://prolinq-production.up.railway.app
 
 The production connection setup is **COMPLETE** and **READY** for use. Both frontend and backend are properly configured to communicate with each other in the production environment.
 
-**Frontend**: https://prolinq-ptq24wy0c-mikomborero-kanyokas-projects.vercel.app  
+**Frontend**: https://prolinq.vercel.app  
 **Backend**: https://prolinq-production.up.railway.app
 
 All services are connected and ready for production use! 🎉
