@@ -69,8 +69,9 @@ const AdvertisementManager = () => {
 
   const downloadImage = (ad) => {
     if (ad.image_url) {
+      const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001';
       const link = document.createElement('a');
-      link.href = `http://localhost:8001${ad.image_url}`;
+      link.href = `${baseUrl}${ad.image_url}`;
       link.download = `${ad.name.replace(/\s+/g, '_')}_ad.png`;
       document.body.appendChild(link);
       link.click();
@@ -220,7 +221,7 @@ const AdvertisementManager = () => {
               {ad.image_url && (
                 <div className="relative">
                   <img
-                    src={`http://localhost:8001${ad.image_url}`}
+                    src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}${ad.image_url}`}
                     alt={ad.headline}
                     className="w-full h-48 object-cover"
                   />

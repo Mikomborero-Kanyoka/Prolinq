@@ -33,14 +33,18 @@ def create_tables():
 
 # Configure CORS origins based on environment
 if ENVIRONMENT == "production":
-    cors_origins = [FRONTEND_URL]
+    cors_origins = [
+        FRONTEND_URL,
+        "https://prolinq-git-main-mikomborero-kanyokas-projects.vercel.app"
+    ]
 else:
     cors_origins = [
         "http://localhost:5173", 
         "http://localhost:3000", 
         "http://192.168.100.130:3000", 
         "http://192.168.100.130:5173",
-        FRONTEND_URL
+        FRONTEND_URL,
+        "https://prolinq-git-main-mikomborero-kanyokas-projects.vercel.app"
     ]
 
 # Create Socket.IO app

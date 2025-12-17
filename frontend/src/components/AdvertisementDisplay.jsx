@@ -161,7 +161,7 @@ const AdvertisementDisplay = ({ category, itemType, limit = 3 }) => {
             <div className="flex items-start space-x-4 p-4">
               {ad.image_url && (
                 <img 
-                  src={`http://localhost:8001${ad.image_url}`}
+                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}${ad.image_url}`}
                   alt={ad.headline}
                   className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
                 />

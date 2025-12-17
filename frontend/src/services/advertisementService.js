@@ -1,8 +1,8 @@
-const API_BASE_URL = 'http://localhost:8001';
-
 class AdvertisementService {
   constructor() {
-    this.baseURL = `${API_BASE_URL}/api/advertisements`;
+    const apiBaseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001';
+    this.baseURL = `${apiBaseUrl}/api/advertisements`;
+    this.apiBaseUrl = apiBaseUrl;
   }
 
   getAuthHeaders() {
@@ -225,7 +225,7 @@ class AdvertisementService {
 
   getImageUrl(imageFilename) {
     if (!imageFilename) return null;
-    return `${API_BASE_URL}/uploads/${imageFilename}`;
+    return `${this.apiBaseUrl}/uploads/${imageFilename}`;
   }
 }
 
