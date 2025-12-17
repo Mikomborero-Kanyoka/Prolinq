@@ -19,7 +19,7 @@ Your Prolinq backend has been successfully configured for Railway deployment. He
 - ✅ `utils.py` - JWT configuration with environment variables
 
 ### Deployment Automation
-- ✅ `start.sh` - Startup script for Railway
+- ✅ `start.sh` - Startup script for Railway (port 3000)
 - ✅ Database initialization on startup
 - ✅ Default admin user creation
 

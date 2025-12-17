@@ -11,7 +11,7 @@ Your Prolinq backend is now fully configured and ready for Railway deployment wi
 2. **CORS Configuration**: Properly configured for production frontend
 3. **Environment Variables**: All required variables documented
 4. **Docker Configuration**: Multi-stage build with ML dependencies
-5. **Port Configuration**: Railway-ready port 8001
+5. **Port Configuration**: Railway-ready port 3000
 6. **Health Checks**: `/health` endpoint implemented
 7. **ML Dependencies**: Graceful fallback for missing ML libraries
 8. **Socket.IO**: Real-time features configured
@@ -128,7 +128,7 @@ VITE_API_URL=https://your-app-name.railway.app
    - Check for trailing slashes
 
 4. **Port Issues**
-   - Railway automatically maps port 8001
+   - Railway automatically maps port 3000
    - No manual port configuration needed
 
 ### Build Process:

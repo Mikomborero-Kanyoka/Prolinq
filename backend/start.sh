@@ -52,4 +52,15 @@ db.close()
 "
 
 echo "🌟 Starting FastAPI application..."
+
+# Default port for Railway
+PORT=${PORT:-3000}
+
+# Check if PORT is a valid number, otherwise use default
+if ! [[ "$PORT" =~ ^[0-9]+$ ]]; then
+    echo "⚠️  Invalid PORT value: $PORT, using default 3000"
+    PORT=3000
+fi
+
+echo "🚀 Starting on port: $PORT"
 exec uvicorn main:socket_app --host 0.0.0.0 --port $PORT
