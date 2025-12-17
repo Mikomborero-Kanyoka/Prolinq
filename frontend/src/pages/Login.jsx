@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useForm } from 'react-hook-form'
+import loginImage from '../assets/images/login.jpg'
 import './Login.css'
 
 const Login = () => {
@@ -57,7 +58,7 @@ const Login = () => {
             <div className="w-full lg:w-2/5 relative overflow-hidden order-first lg:order-none">
               <div className="relative h-48 sm:h-56 md:h-64 lg:h-full">
                 <img
-                  src="/src/assets/images/login.jpg"
+                  src={loginImage}
                   alt="Career opportunities"
                   className="w-full h-full object-cover"
                 />
