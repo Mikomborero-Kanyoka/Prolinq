@@ -9,7 +9,6 @@ python-multipart
 aiofiles
 alembic
 Pillow
-sentence-transformers
 scikit-learn
 numpy
 python-socketio[asyncio_client]
