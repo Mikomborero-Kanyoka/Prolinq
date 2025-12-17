@@ -32,5 +32,6 @@ ENV PYTHONUNBUFFERED=1
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Start command
-CMD ["uvicorn", "main:socket_app", "--host", "0.0.0.0", "--port", "8000"]
+# Make start script executable and run it
+RUN chmod +x start.sh
+CMD ["./start.sh"]
