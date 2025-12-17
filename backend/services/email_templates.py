@@ -295,7 +295,7 @@ This is an automated message from Prolinq. Please don't reply with sensitive inf
                 <div class="job-company">{job.get('company', 'Company')}</div>
                 <div class="job-location">Location: {job.get('location', 'Remote')}</div>
                 <a href="{job.get('link', f'https://prolinq.app/jobs/{job.get("job_id", "")}')}" class="apply-button">
-                    View & Apply -&gt;
+                    View & Apply →
                 </a>
             </div>
             """ for idx, job in enumerate(jobs, 1)])}

@@ -146,7 +146,7 @@ async def connect(sid, environ, auth=None):
 
 @sio.event
 async def disconnect(sid):
-    print(f"🔌 Client disconnected: {sid}")
+    print(f"� Client disconnected: {sid}")
 
 @sio.event
 async def new_message(data):
@@ -165,7 +165,7 @@ async def notification(data):
     """Broadcast notification to specific user"""
     user_id = data.get('user_id')
     if user_id:
-        print(f"📢 Sending notification to user {user_id}: {data}")
+        print(f"� Sending notification to user {user_id}: {data}")
         await sio.emit('notification', data, room=f"user_{user_id}")
     else:
         print(f"📢 Broadcasting notification to all: {data}")
