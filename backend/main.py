@@ -22,8 +22,14 @@ load_dotenv()
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Defer database creation - will be done in startup event
+def create_tables():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ Database tables created successfully")
+    except Exception as e:
+        print(f"⚠️  Error creating database tables: {e}")
+        # Don't fail startup - tables will be created on first access
 
 # Configure CORS origins based on environment
 if ENVIRONMENT == "production":
@@ -84,9 +90,18 @@ app.include_router(email.router)
 # Startup and shutdown events
 @app.on_event("startup")
 async def startup_event():
-    """Start background scheduler on application startup"""
+    """Initialize database and start background scheduler"""
     print("🚀 Application starting...")
-    start_scheduler(app)
+    
+    # Initialize database tables
+    create_tables()
+    
+    # Start scheduler (this might fail in Railway, so catch exceptions)
+    try:
+        start_scheduler(app)
+        print("✅ Scheduler started successfully")
+    except Exception as e:
+        print(f"⚠️  Scheduler failed to start (this is okay in Railway): {e}")
 
 @app.on_event("shutdown")
 async def shutdown_event():

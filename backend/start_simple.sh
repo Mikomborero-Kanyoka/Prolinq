@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Railway startup script for Prolinq backend
+# Simplified Railway startup script for Prolinq backend
 
 echo "🚀 Starting Prolinq backend on Railway..."
 
@@ -26,5 +26,9 @@ echo "🌐 Healthcheck will be available at: http://0.0.0.0:$PORT/"
 # Activate virtual environment
 source /opt/venv/bin/activate
 
-# Start the application with explicit host binding
-exec uvicorn main:socket_app --host 0.0.0.0 --port $PORT --log-level debug --workers 1
+# Test basic Python import first
+echo "🔍 Testing Python environment..."
+python -c "import fastapi; print('✅ FastAPI available')"
+
+# Start with minimal configuration
+exec uvicorn main:app --host 0.0.0.0 --port $PORT --log-level debug --workers 1
