@@ -25,7 +25,9 @@ export const SocketProvider = ({ children }) => {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionDelay: 1000,
-        reconnectionAttempts: 5
+        reconnectionAttempts: 5,
+        secure: true,
+        forceNew: true
       })
 
       newSocket.on('connect', () => {

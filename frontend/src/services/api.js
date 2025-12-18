@@ -1,6 +1,13 @@
 import axios from 'axios';
 
+// Fixed: Ensure HTTPS URLs for production deployment - Dec 18 2025
 const API_URL = import.meta.env.VITE_API_URL || 'https://prolinq-production.up.railway.app/api';
+
+// Debug: Log the actual URL being used
+console.log('🔧 [API Service] Environment:', import.meta.env.MODE);
+console.log('🔧 [API Service] VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('🔧 [API Service] Final API_URL:', API_URL);
+console.log('🔧 [API Service] App Version:', typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'unknown');
 
 const api = axios.create({
   baseURL: API_URL,
@@ -141,6 +148,10 @@ export const reviewsAPI = {
 // Admin API - separate instance without /api prefix
 const adminApi = axios.create({
   baseURL: import.meta.env.VITE_ADMIN_API_URL || 'https://prolinq-production.up.railway.app',
+  // Ensure HTTPS is used
+  httpsAgent: new (typeof window !== 'undefined' ? undefined : require('https').Agent)({
+    rejectUnauthorized: false
+  }),
 });
 
 // Add token to admin requests

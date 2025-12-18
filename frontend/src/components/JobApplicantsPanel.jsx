@@ -143,7 +143,7 @@ const Card = ({ app, expanded, setExpanded, onAccept, onReject, readonly }) => {
         <div className="flex items-center gap-2 flex-1">
           {applicant.profile_photo && (
             <img
-              src={`http://192.168.100.130:5000${applicant.profile_photo}`}
+              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}${applicant.profile_photo}`}
               alt={applicant.full_name}
               className="w-10 h-10 rounded-full object-cover"
               onError={(e) =>

@@ -121,7 +121,7 @@ const AdvertisementCreator = ({ onAdvertisementCreated }) => {
   const downloadImage = () => {
     if (createdAd && createdAd.image_url) {
       const link = document.createElement('a');
-      link.href = `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}${createdAd.image_url}`;
+      link.href = `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}${createdAd.image_url}`;
       link.download = `${createdAd.name.replace(/\s+/g, '_')}_ad.png`;
       document.body.appendChild(link);
       link.click();
@@ -323,7 +323,7 @@ const AdvertisementCreator = ({ onAdvertisementCreated }) => {
                   </div>
                   <div className="border rounded-lg overflow-hidden">
                     <img
-                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}${createdAd.image_url}`}
+                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}${createdAd.image_url}`}
                       alt={createdAd.headline}
                       className="w-full h-auto"
                     />
