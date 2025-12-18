@@ -11,8 +11,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "start:network": "vite --host 0.0.0.0 --port 3000",
     "dev:network": "vite --host 0.0.0.0 --port 3000",
-    "run:local": "node run-frontend.js local",
-    "run:network": "node run-frontend.js network"
+    "run": "node run-frontend.js"
   },
   "dependencies": {
     "@lottiefiles/react-lottie-player": "^3.6.0",

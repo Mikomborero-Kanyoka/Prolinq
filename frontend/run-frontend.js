@@ -9,19 +9,10 @@ import { execSync } from 'child_process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const args = process.argv.slice(2);
-const mode = args[0] || 'local';
+console.log(`🚀 Starting Prolinq Frontend...\n`);
 
-console.log(`🚀 Starting Prolinq Frontend in ${mode} mode...\n`);
-
-// Validate mode
-if (!['local', 'network'].includes(mode)) {
-  console.error('❌ Invalid mode. Use "local" or "network"');
-  process.exit(1);
-}
-
-// Copy the appropriate environment file
-const envFile = mode === 'local' ? '.env.local' : '.env.network';
+// Use the network environment file
+const envFile = '.env.network';
 const targetEnvFile = '.env';
 
 try {
@@ -37,11 +28,11 @@ try {
   console.log(`📡 API URL: ${apiUrl}`);
   console.log(`🔧 Admin API URL: ${adminApiUrl}\n`);
   
-  // Determine the command to run
-  const command = mode === 'local' ? 'npm start' : 'npm run start:network';
+  // Run the development server
+  const command = 'npm run dev';
   
   console.log(`🔥 Running: ${command}`);
-  console.log(`🌐 Frontend will be available at: ${mode === 'local' ? 'http://localhost:5173' : 'http://192.168.100.130:3000'}`);
+  console.log(`🌐 Frontend will be available at: https://192.168.100.130:3000`);
   console.log('💡 Press Ctrl+C to stop\n');
   
   // Execute the command

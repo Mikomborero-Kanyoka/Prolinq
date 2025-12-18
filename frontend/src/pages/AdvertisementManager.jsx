@@ -169,7 +169,7 @@ const AdvertisementManager = () => {
     if (!imageUrl) return null;
     
     // Handle full URLs
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    if (imageUrl.startsWith('https://')) {
       return imageUrl;
     }
     

@@ -76,8 +76,8 @@ const PictureAdForm = () => {
 
     if (!formData.cta_url.trim()) {
       newErrors.cta_url = 'CTA URL is required'
-    } else if (!formData.cta_url.match(/^https?:\/\//)) {
-      newErrors.cta_url = 'URL must start with http:// or https://'
+    } else if (!formData.cta_url.match(/^https:\/\//)) {
+      newErrors.cta_url = 'URL must start with https://'
     }
 
     if (!image) {
@@ -204,7 +204,7 @@ const PictureAdForm = () => {
                 </div>
               )}
               <p className="text-xs text-gray-500 mt-1">
-                Must start with http:// or https://
+                Must start with https://
               </p>
             </div>
 
