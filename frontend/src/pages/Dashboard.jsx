@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api from '../services/api'
 import { Briefcase, MessageSquare, Bell, TrendingUp, User, Mail, Search, Settings, BarChart, Plus, Sparkles } from 'lucide-react'
+import dashboardBackground from '../assets/images/jobHero2.jpg'
 import './Dashboard.css'
 
 const Dashboard = () => {
@@ -53,7 +54,7 @@ const Dashboard = () => {
       <div className="relative h-64 sm:h-72 md:h-80 lg:h-96 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/src/assets/images/jobHero2.jpg"
+            src={dashboardBackground}
             alt="Dashboard background"
             className="w-full h-full object-cover"
             loading="lazy"
