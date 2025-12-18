@@ -18,7 +18,7 @@ const TalentCard = ({ user }) => {
   const getImageUrl = (filename) => {
     if (!filename) return null
     if (filename.startsWith('http')) return filename
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8001/api'
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://prolinq-production.up.railway.app/api'
     const baseUrl = apiUrl.replace('/api', '')
     return `${baseUrl}/uploads/${filename}`
   }

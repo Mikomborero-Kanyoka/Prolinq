@@ -33,7 +33,7 @@ const PictureAdCard = ({ ad, onAdClick }) => {
     picture_filename: ad.picture_filename
   })
 
-  const imageUrl = `/uploads/${ad.picture_filename}`
+  const imageUrl = `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}/uploads/${ad.picture_filename}`
 
   const handleAdClick = async () => {
     try {

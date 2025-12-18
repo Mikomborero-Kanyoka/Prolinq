@@ -1,6 +1,6 @@
 class AdvertisementService {
   constructor() {
-    const apiBaseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001';
+    const apiBaseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app';
     this.baseURL = `${apiBaseUrl}/api/advertisements`;
     this.apiBaseUrl = apiBaseUrl;
   }

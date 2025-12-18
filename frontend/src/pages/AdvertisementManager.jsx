@@ -174,7 +174,7 @@ const AdvertisementManager = () => {
     }
     
     // Handle relative URLs
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001';
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app';
     return `${baseUrl}${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
   };
 

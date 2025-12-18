@@ -55,7 +55,7 @@ const TopNav = ({ onMenuToggle }) => {
   useEffect(() => {
     if (!user) return
 
-    const socket = io(import.meta.env.VITE_ADMIN_API_URL || 'http://localhost:8001', {
+    const socket = io(import.meta.env.VITE_ADMIN_API_URL || 'https://prolinq-production.up.railway.app', {
       auth: {
         user_id: user.id
       }
@@ -547,7 +547,7 @@ const TopNav = ({ onMenuToggle }) => {
                     <div className="relative w-8 h-8 md:w-9 md:h-9">
                       {user?.profile_photo ? (
                         <img
-                          src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}/uploads/${user.profile_photo}`}
+                          src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}/uploads/${user.profile_photo}`}
                           alt={user.full_name || 'Profile'}
                           className="w-full h-full rounded-full object-cover ring-2 ring-white shadow-sm"
                           onError={(e) => {
@@ -578,7 +578,7 @@ const TopNav = ({ onMenuToggle }) => {
                             <div className="w-14 h-14 rounded-full ring-4 ring-white shadow-md overflow-hidden">
                               {user?.profile_photo ? (
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8001'}/uploads/${user.profile_photo}`}
+                                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://prolinq-production.up.railway.app'}/uploads/${user.profile_photo}`}
                                   alt={user.full_name}
                                   className="w-full h-full object-cover"
                                 />

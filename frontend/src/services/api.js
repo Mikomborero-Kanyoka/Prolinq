@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://prolinq-production.up.railway.app/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -114,7 +114,7 @@ export const reviewsAPI = {
 
 // Admin API - separate instance without /api prefix
 const adminApi = axios.create({
-  baseURL: import.meta.env.VITE_ADMIN_API_URL || 'http://localhost:8001',
+  baseURL: import.meta.env.VITE_ADMIN_API_URL || 'https://prolinq-production.up.railway.app',
 });
 
 // Add token to admin requests
