@@ -13,7 +13,7 @@ from datetime import datetime
 from database import get_db
 from models import User, Job
 from embedding_model import get_model, embedding_to_string, string_to_embedding
-from auth import get_current_user
+# from auth import get_current_user  # Not used in current implementation
 
 router = APIRouter(prefix="/api/skills-matching", tags=["skills-matching"])
 
@@ -108,8 +108,14 @@ async def embed_job(job_data: JobEmbeddingRequest):
         # Generate embedding
         embedding = model.embed_job(job_dict)
         
+        # Handle both numpy arrays and lists
+        if hasattr(embedding, 'tolist'):
+            embedding_list = embedding.tolist()
+        else:
+            embedding_list = list(embedding) if not isinstance(embedding, list) else embedding
+        
         return EmbeddingResponse(
-            embedding=embedding.tolist(),
+            embedding=embedding_list,
             embedding_dimension=model.get_embedding_dimension(),
             success=True
         )
@@ -146,8 +152,14 @@ async def embed_user(user_data: UserEmbeddingRequest):
         # Generate embedding
         embedding = model.embed_user(user_dict)
         
+        # Handle both numpy arrays and lists
+        if hasattr(embedding, 'tolist'):
+            embedding_list = embedding.tolist()
+        else:
+            embedding_list = list(embedding) if not isinstance(embedding, list) else embedding
+        
         return EmbeddingResponse(
-            embedding=embedding.tolist(),
+            embedding=embedding_list,
             embedding_dimension=model.get_embedding_dimension(),
             success=True
         )
@@ -304,8 +316,8 @@ async def embed_job_in_db(job_id: int, db: Session = Depends(get_db)):
         embedding = model.embed_job(job_dict)
         
         # Store embedding in database
-        job.job_embedding = embedding_to_string(embedding)
-        job.embedding_updated_at = datetime.utcnow()
+        setattr(job, 'job_embedding', embedding_to_string(embedding))
+        setattr(job, 'embedding_updated_at', datetime.utcnow())
         db.commit()
         
         return {
@@ -355,8 +367,8 @@ async def embed_user_in_db(user_id: int, db: Session = Depends(get_db)):
         embedding = model.embed_user(user_dict)
         
         # Store embedding in database
-        user.profile_embedding = embedding_to_string(embedding)
-        user.embedding_updated_at = datetime.utcnow()
+        setattr(user, 'profile_embedding', embedding_to_string(embedding))
+        setattr(user, 'embedding_updated_at', datetime.utcnow())
         db.commit()
         
         return {
@@ -389,13 +401,17 @@ async def get_matches_for_user(user_id: int, limit: int = 10, db: Session = Depe
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
-        if not user.profile_embedding:
+        user_embedding_str = getattr(user, 'profile_embedding', None)
+        if not user_embedding_str:
             raise HTTPException(status_code=400, detail="User embedding not found. Generate embedding first.")
         
         model = get_model()
-        user_embedding = string_to_embedding(user.profile_embedding)
+        # Convert database string to embedding
+        user_embedding = string_to_embedding(str(user_embedding_str))
         
-        if user_embedding.size == 0:
+        # Handle both numpy arrays and lists
+        embedding_size = len(user_embedding) if hasattr(user_embedding, '__len__') else getattr(user_embedding, 'size', 0)
+        if embedding_size == 0:
             raise HTTPException(status_code=400, detail="Invalid user embedding")
         
         # Get all jobs with embeddings
@@ -406,8 +422,10 @@ async def get_matches_for_user(user_id: int, limit: int = 10, db: Session = Depe
         
         matches = []
         for job in jobs:
-            job_embedding = string_to_embedding(job.job_embedding)
-            if job_embedding.size == 0:
+            job_embedding = string_to_embedding(str(job.job_embedding))
+            # Handle both numpy arrays and lists
+            job_embedding_size = len(job_embedding) if hasattr(job_embedding, '__len__') else getattr(job_embedding, 'size', 0)
+            if job_embedding_size == 0:
                 continue
                 
             similarity = model.calculate_similarity(job_embedding, user_embedding)

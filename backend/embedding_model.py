@@ -21,7 +21,15 @@ except ImportError as e:
     ML_AVAILABLE = False
     logging.warning(f"ML dependencies not available: {e}. Using fallback matching.")
     # Create fallback numpy-like functionality
+    class MockLinalg:
+        @staticmethod
+        def norm(a: List[float]) -> float:
+            return sum(x * x for x in a) ** 0.5
+    
     class MockNumpy:
+        def __init__(self):
+            self.linalg = MockLinalg()
+        
         @staticmethod
         def zeros(shape: Union[int, tuple]) -> List[float]:
             if isinstance(shape, int):
@@ -60,14 +68,7 @@ except ImportError as e:
                 return [array]
             return [array]
     
-    class MockLinalg:
-        @staticmethod
-        def norm(a: List[float]) -> float:
-            return sum(x * x for x in a) ** 0.5
-    
     np = MockNumpy()
-    # Create linalg namespace
-    np.linalg = MockLinalg()
     
     # Mock classes for type hints
     class SentenceTransformer:
@@ -478,7 +479,8 @@ def embedding_to_string(embedding: EmbeddingVector) -> str:
         elif isinstance(embedding, list):
             return json.dumps(embedding)
         else:
-            return json.dumps(list(embedding))
+            # Convert to list if it's not already
+            return json.dumps(list(embedding) if hasattr(embedding, '__iter__') else [])
     except Exception as e:
         logger.error(f"Error converting embedding to string: {e}")
         return json.dumps([])
