@@ -161,7 +161,7 @@ const PostJob = () => {
         external_url: data.application_method === 'external' ? data.external_url : null
       }
       
-      const response = await api.post('/jobs', jobData)
+      const response = await api.post('/jobs/', jobData)
       toast.success('Job posted successfully!')
       localStorage.removeItem('jobDraft')
       navigate(`/jobs/${response.data.id}`)

@@ -125,7 +125,7 @@ const Jobs = () => {
       setIsLoadingSemanticSearch(true)
       console.log('🔍 Performing semantic search for:', query)
 
-      const response = await api.post('/jobs/search/semantic', {
+      const response = await api.post('/jobs/search/semantic/', {
         query: query.trim(),
         limit: 10,
         min_score: 0.1

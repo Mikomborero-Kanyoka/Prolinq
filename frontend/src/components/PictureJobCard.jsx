@@ -36,12 +36,12 @@ const PictureJobCard = ({ job, onJobUpdated }) => {
       setIsLoading(true)
       if (isSaved) {
         // Remove from saved
-        await api.delete(`/api/jobs/${job.id}/save`)
+        await api.delete(`/api/jobs/${job.id}/save/`)
         setIsSaved(false)
         toast.success('Removed from saved jobs')
       } else {
         // Save job
-        await api.post(`/api/jobs/${job.id}/save`)
+        await api.post(`/api/jobs/${job.id}/save/`)
         setIsSaved(true)
         toast.success('Job saved successfully')
       }

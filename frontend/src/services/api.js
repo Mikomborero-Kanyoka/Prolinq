@@ -106,9 +106,9 @@ export const applicationsAPI = {
 // Messages endpoints
 export const messagesAPI = {
   send: (data) => api.post('/messages/', data),
-  getConversation: (userId) => api.get(`/messages/${userId}`),
-  getAllConversations: () => api.get('/messages/me/conversations'),
-  markAsRead: (messageId) => api.put(`/messages/${messageId}/read`),
+  getConversation: (userId) => api.get(`/messages/${userId}/`),
+  getAllConversations: () => api.get('/messages/me/conversations/'),
+  markAsRead: (messageId) => api.put(`/messages/${messageId}/read/`),
 };
 
 // Profiles endpoints
