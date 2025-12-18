@@ -25,7 +25,7 @@ const Dashboard = () => {
     try {
       setLoading(true)
       if (user?.primary_role === 'employer') {
-        const jobsRes = await api.get('/jobs?limit=1')
+        const jobsRes = await api.get('/jobs/?limit=1')
         setStats(prev => ({ ...prev, jobs: jobsRes.data.length }))
       } else {
         try {

@@ -69,7 +69,7 @@ const Jobs = () => {
       
       const queryString = params.toString()
       console.log('Fetching jobs with filters:', filters, 'Query:', queryString)
-      const response = await api.get(`/jobs${queryString ? '?' + queryString : ''}`)
+      const response = await api.get(`/jobs/${queryString ? '?' + queryString : ''}`)
       console.log('Jobs response:', response.data)
       setJobs(response.data)
     } catch (error) {
