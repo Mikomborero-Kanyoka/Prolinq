@@ -35,7 +35,8 @@ def create_tables():
 if ENVIRONMENT == "production":
     cors_origins = [
         FRONTEND_URL,
-        "https://prolinq.vercel.app"
+        "https://prolinq.vercel.app",
+        "https://prolinq-frontend.vercel.app"
     ]
 else:
     cors_origins = [
@@ -44,7 +45,8 @@ else:
         "http://192.168.100.130:3000", 
         "http://192.168.100.130:5173",
         FRONTEND_URL,
-        "https://prolinq.vercel.app"
+        "https://prolinq.vercel.app",
+        "https://prolinq-frontend.vercel.app"
     ]
 
 # Create Socket.IO app
