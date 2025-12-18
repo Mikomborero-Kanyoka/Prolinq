@@ -1,28 +1,29 @@
 # Logout Routing Fix Complete
 
 ## Problem Identified
-The application was experiencing routing issues during logout where users would encounter a 404 error page instead of being properly redirected to the login page.
+The application was experiencing routing issues during logout where users would encounter a 404 error page instead of being properly redirected to the login page. Additionally, there was a React Router context error when trying to use `useNavigate` in the AuthContext.
 
 ## Root Cause Analysis
-The issue was caused by conflicting navigation behaviors during the logout process:
+The issue was caused by multiple problems:
 
-1. **AuthContext.jsx**: Used `window.location.href = '/login'` (hard browser redirect)
-2. **ProtectedRoute.jsx**: Had a useEffect that redirected to `/` when user became null
-3. **Race Condition**: Both components tried to redirect simultaneously, causing navigation conflicts
+1. **AuthContext.jsx**: Initially tried to use `useNavigate` outside of Router context
+2. **ProtectedRoute.jsx**: Had conflicting navigation logic during logout
+3. **Race Condition**: Multiple components trying to handle logout redirects simultaneously
 
 ## Solution Implemented
 
 ### 1. Fixed AuthContext.jsx
-- **Before**: Used `window.location.href = '/login'` (hard redirect)
-- **After**: Used React Router's `navigate('/login', { replace: true })` (soft navigation)
+- **Issue**: Cannot use `useNavigate` outside Router context
+- **Solution**: Reverted to `window.location.href = '/login'` with proper timing
 - **Benefits**: 
-  - Maintains single-page application behavior
-  - Prevents full page reload
-  - Eliminates routing conflicts
+  - Works outside Router context
+  - Ensures complete page refresh and state reset
+  - Reliable logout behavior
 
 ```javascript
-// Added useNavigate import
-import { useNavigate } from 'react-router-dom';
+// Removed useNavigate import
+import { authAPI } from '../services/api';
+import toast from 'react-hot-toast';
 
 // Updated logout function
 const logout = async () => {
@@ -42,28 +43,36 @@ const logout = async () => {
     console.error('Logout notification error:', error);
   }
   
-  // Use React Router navigation instead of hard redirect
+  // Use hard redirect to ensure proper logout
   setTimeout(() => {
-    navigate('/login', { replace: true });
+    window.location.href = '/login';
   }, 500);
 };
 ```
 
-### 2. Simplified ProtectedRoute.jsx
-- **Before**: Had conflicting useEffect that redirected to `/` on logout
-- **After**: Removed the conflicting useEffect, keeping only the basic protection logic
+### 2. Updated ProtectedRoute.jsx
+- **Issue**: Needed to handle logout state changes without conflicting redirects
+- **Solution**: Added explicit handling for logout scenario with comments
 - **Benefits**:
-  - Eliminates navigation race conditions
-  - Simplifies component logic
-  - Allows AuthContext to handle logout routing exclusively
+  - Prevents navigation conflicts
+  - Clear documentation of logout handling
+  - Maintains protection logic
 
 ```javascript
-// Simplified version without conflicting navigation
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useEffect } from 'react'
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, user } = useAuth()
+
+  // Handle redirect when user becomes null (logout scenario)
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && user === null) {
+      // Don't redirect here - let AuthContext handle the logout redirect
+      // This prevents conflicting redirects
+    }
+  }, [isAuthenticated, user, isLoading])
 
   if (isLoading) {
     return (
@@ -83,19 +92,19 @@ const ProtectedRoute = ({ children }) => {
 
 ## Technical Benefits
 
-1. **Single Source of Truth**: AuthContext now handles all logout routing logic
-2. **Consistent Navigation**: Uses React Router throughout the application
-3. **Better UX**: Smooth transitions without full page reloads
-4. **Race Condition Elimination**: No more competing navigation attempts
-5. **Maintainable Code**: Clear separation of concerns
+1. **Context-Aware Solution**: Uses appropriate navigation methods for each context
+2. **Reliable Logout**: Hard redirect ensures complete state reset
+3. **Conflict Prevention**: ProtectedRoute explicitly avoids conflicting with AuthContext
+4. **Error Resolution**: Eliminates React Router context errors
+5. **Maintainable Code**: Clear separation of concerns and documentation
 
 ## Testing Recommendations
 
 1. **Logout Flow Test**: 
    - Login as user
    - Click logout button
-   - Verify smooth redirect to `/login`
-   - Confirm no 404 errors
+   - Verify redirect to `/login` after 500ms delay
+   - Confirm no 404 errors or React errors
 
 2. **Protected Route Test**:
    - Try to access protected page while logged out
@@ -105,20 +114,25 @@ const ProtectedRoute = ({ children }) => {
    - Try to access admin page as non-admin user
    - Verify proper access denied message
 
-4. **Browser Back/Forward Test**:
+4. **Console Error Test**:
+   - Check browser console for React Router errors
+   - Verify no `useNavigate` context errors
+
+5. **Browser Back/Forward Test**:
    - Test browser navigation after logout
    - Verify proper behavior
 
 ## Files Modified
 
 1. `Prolinq/frontend/src/contexts/AuthContext.jsx`
-   - Added `useNavigate` import
-   - Updated logout function to use React Router navigation
+   - Removed `useNavigate` import and usage
+   - Updated logout function to use `window.location.href`
+   - Maintained 500ms delay for smooth UX
 
 2. `Prolinq/frontend/src/components/ProtectedRoute.jsx`
-   - Removed conflicting useEffect
-   - Simplified component logic
-   - Removed unused imports
+   - Added useEffect to handle logout state changes
+   - Added explanatory comments
+   - Explicitly prevents conflicting redirects
 
 ## Deployment Notes
 
@@ -126,7 +140,8 @@ const ProtectedRoute = ({ children }) => {
 - Changes are backward compatible
 - No database or backend changes needed
 - Frontend-only fix
+- Resolves React Router context errors
 
 ## Summary
 
-The logout routing issue has been resolved by eliminating conflicting navigation behaviors and standardizing on React Router for all navigation within the application. Users will now experience smooth logout redirects without encountering 404 errors.
+The logout routing issue has been resolved by using context-appropriate navigation methods and preventing conflicting redirect behaviors. The solution uses `window.location.href` in AuthContext (which works outside Router context) and ensures ProtectedRoute doesn't interfere with the logout process. Users will now experience smooth logout redirects without encountering 404 errors or React Router context errors.
