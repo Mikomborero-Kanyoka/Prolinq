@@ -22,6 +22,32 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Add response interceptor for better error handling
+api.interceptors.response.use(
+  (response) => {
+    console.log('✅ Response received:', response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error('❌ API Error:', error.response?.status, error.config?.url);
+    console.error('📄 Error details:', error.response?.data);
+    
+    if (error.response?.status === 401) {
+      console.warn('🚨 401 Unauthorized - Clearing invalid token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Only redirect to login if not already on login page
+      if (!window.location.pathname.includes('/login')) {
+        console.log('🔄 Redirecting to login due to 401 error');
+        window.location.href = '/login';
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Auth endpoints
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
