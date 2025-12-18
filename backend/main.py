@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
@@ -66,6 +66,29 @@ app = FastAPI(
 uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+
+# HTTPS enforcement middleware for Railway
+@app.middleware("http")
+async def force_https_middleware(request: Request, call_next):
+    # Handle Railway's proxy headers and force HTTPS in production
+    if os.getenv("ENVIRONMENT") == "production":
+        # Check if request came via HTTPS (Railway sets x-forwarded-proto)
+        forwarded_proto = request.headers.get("x-forwarded-proto")
+        if forwarded_proto == "https":
+            # Request came via HTTPS, ensure response redirects use HTTPS
+            response = await call_next(request)
+            
+            # Fix any HTTP redirects to HTTPS
+            location = response.headers.get("location")
+            if location and location.startswith("http://"):
+                https_location = location.replace("http://", "https://", 1)
+                response.headers["location"] = https_location
+                print(f"🔒 Fixed redirect: {location} -> {https_location}")
+            
+            return response
+    
+    # For development or non-proxied requests
+    return await call_next(request)
 
 # CORS middleware
 app.add_middleware(
