@@ -241,8 +241,8 @@ const Messages = () => {
   const fetchConversations = async () => {
     try {
       const [regularResponse, adminResponse] = await Promise.all([
-        api.get('/messages/conversations'),
-        api.get('/messages/admin/received').catch(() => ({ data: [] }))
+        api.get('/messages/conversations/'),
+        api.get('/messages/admin/received/').catch(() => ({ data: [] }))
       ])
       
       const regularConversations = regularResponse.data || []
@@ -298,7 +298,7 @@ const Messages = () => {
       setLoadingChat(true)
       
       if (isAdminConversation) {
-        const adminResponse = await api.get('/messages/admin/received').catch(() => ({ data: [] }))
+        const adminResponse = await api.get('/messages/admin/received/').catch(() => ({ data: [] }))
         const adminMessages = (adminResponse.data || [])
           .filter(msg => msg.admin_id === parseInt(otherUserId))
           .map(msg => ({
@@ -313,7 +313,7 @@ const Messages = () => {
       } else {
         const [regularResponse, adminResponse] = await Promise.all([
           api.get(`/messages/conversations/${otherUserId}`),
-          api.get('/messages/admin/received').catch(() => ({ data: [] }))
+          api.get('/messages/admin/received/').catch(() => ({ data: [] }))
         ])
         
         const regularMessages = regularResponse.data || []
