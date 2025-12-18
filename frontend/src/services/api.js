@@ -148,10 +148,6 @@ export const reviewsAPI = {
 // Admin API - separate instance without /api prefix
 const adminApi = axios.create({
   baseURL: import.meta.env.VITE_ADMIN_API_URL || 'https://prolinq-production.up.railway.app',
-  // Ensure HTTPS is used
-  httpsAgent: new (typeof window !== 'undefined' ? undefined : require('https').Agent)({
-    rejectUnauthorized: false
-  }),
 });
 
 // Add token to admin requests
