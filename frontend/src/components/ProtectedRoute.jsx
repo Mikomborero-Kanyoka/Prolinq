@@ -1,17 +1,8 @@
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { useEffect } from 'react'
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading, user } = useAuth()
-  const navigate = useNavigate()
-
-  // Redirect to landing page when user logs out from a protected page
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated && user === null) {
-      navigate('/', { replace: true })
-    }
-  }, [isAuthenticated, user, isLoading, navigate])
+  const { isAuthenticated, isLoading } = useAuth()
 
   if (isLoading) {
     return (
@@ -25,14 +16,3 @@ const ProtectedRoute = ({ children }) => {
 }
 
 export default ProtectedRoute
-
-
-
-
-
-
-
-
-
-
-

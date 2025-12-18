@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -15,6 +16,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const refreshUser = async () => {
     try {
@@ -133,9 +135,9 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout notification error:', error);
     }
     
-    // Redirect to login page after a short delay to allow toast to show
+    // Use React Router navigation instead of hard redirect
     setTimeout(() => {
-      window.location.href = '/login';
+      navigate('/login', { replace: true });
     }, 500);
   };
 
