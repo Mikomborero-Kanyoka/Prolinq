@@ -224,10 +224,10 @@ const Messages = () => {
         if (conversation?.is_admin_conversation) {
           const adminMessages = messages.filter(msg => msg.is_admin_message && !msg.is_read)
           for (const msg of adminMessages) {
-            await api.put(`/messages/admin/${msg.id}/read`)
+            await api.put(`/messages/admin/${msg.id}/read/`)
           }
         } else {
-          await api.post(`/messages/conversations/${userId}/mark-read`)
+          await api.post(`/messages/conversations/${userId}/mark-read/`)
         }
         fetchConversations()
       } catch (error) {
@@ -312,7 +312,7 @@ const Messages = () => {
         setMessages(adminMessages)
       } else {
         const [regularResponse, adminResponse] = await Promise.all([
-          api.get(`/messages/conversations/${otherUserId}`),
+          api.get(`/messages/conversations/${otherUserId}/`),
           api.get('/messages/admin/received/').catch(() => ({ data: [] }))
         ])
         
@@ -439,9 +439,9 @@ const Messages = () => {
     if (!window.confirm('Delete this message?')) return
     try {
       if (isAdminMessage) {
-        await api.delete(`/messages/admin/${messageId}/delete-received`)
+        await api.delete(`/messages/admin/${messageId}/delete-received/`)
       } else {
-        await api.delete(`/messages/${messageId}`)
+        await api.delete(`/messages/${messageId}/`)
       }
       setMessages(prev => prev.filter(msg => msg.id !== messageId))
       toast.success('Message deleted')
@@ -455,7 +455,7 @@ const Messages = () => {
   const handleDeleteConversation = async () => {
     if (!window.confirm('Delete this conversation?')) return
     try {
-      await api.delete(`/messages/conversations/${userId}`)
+      await api.delete(`/messages/conversations/${userId}/`)
       navigate('/messages')
       fetchConversations()
       toast.success('Conversation deleted')
@@ -510,7 +510,7 @@ const Messages = () => {
         ...(repliedMessage && { reply_to_id: repliedMessage.id })
       }
       
-      const response = await api.post('/messages', messageData)
+      const response = await api.post('/messages/', messageData)
       setMessages(prev => [...prev, response.data])
       setNewMessage('')
       setRepliedMessage(null)

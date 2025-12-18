@@ -79,7 +79,7 @@ const Chat = () => {
     const markAsRead = async () => {
       if (!userId) return
       try {
-        await api.post(`/messages/conversations/${userId}/mark-read`)
+      await api.post(`/messages/conversations/${userId}/mark-read/`)
       } catch (error) {
         // ignore
       }
@@ -90,7 +90,7 @@ const Chat = () => {
   const fetchMessages = async () => {
     if (!userId) return
     try {
-      const response = await api.get(`/messages/conversations/${userId}`)
+      const response = await api.get(`/messages/conversations/${userId}/`)
       setMessages(response.data)
     } catch (error) {
       toast.error('Failed to fetch messages')
@@ -132,7 +132,7 @@ const Chat = () => {
         reply_to_id: replyTo?.id || null,
         message_type: 'text'
       }
-      const response = await api.post('/messages', messageData)
+      const response = await api.post('/messages/', messageData)
       setMessages(prev => [...prev, response.data])
       setNewMessage('')
       setReplyTo(null)
@@ -149,7 +149,7 @@ const Chat = () => {
 
   const handleDeleteMessage = async (messageId) => {
     try {
-      await api.delete(`/messages/${messageId}`)
+      await api.delete(`/messages/${messageId}/`)
       setMessages(prev => prev.filter(m => m.id !== messageId))
       toast.success('Message deleted')
     } catch (error) {
@@ -161,7 +161,7 @@ const Chat = () => {
     if (!confirm('Are you sure you want to delete all messages in this chat? This action cannot be undone.') || !userId) return
 
     try {
-      await api.delete(`/messages/conversations/${userId}`)
+      await api.delete(`/messages/conversations/${userId}/`)
       setMessages([])
       toast.success('All messages deleted')
     } catch (error) {
