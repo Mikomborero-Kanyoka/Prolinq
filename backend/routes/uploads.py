@@ -5,10 +5,10 @@ from typing import Optional
 import uuid
 import os
 
-from ..database import get_db
-from ..services.supabase_storage import supabase_storage
-from ..auth import get_current_user
-from ..models import User
+from database import get_db
+from services.supabase_storage import supabase_storage
+from auth import get_current_user
+from models import User
 
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 
