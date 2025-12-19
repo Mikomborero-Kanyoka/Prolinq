@@ -9,14 +9,23 @@ logger = logging.getLogger(__name__)
 
 class SupabaseStorageService:
     def __init__(self):
-        self.supabase_url: str = os.getenv("SUPABASE_URL")
-        self.supabase_key: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+        self.supabase_url: Optional[str] = os.getenv("SUPABASE_URL")
+        self.supabase_key: Optional[str] = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
         self.bucket_name: str = "prolinq_pictures"
+        self.client: Optional[Client] = None
+        self.enabled: bool = False
         
-        if not self.supabase_url or not self.supabase_key:
-            raise ValueError("Supabase credentials not found in environment variables")
-        
-        self.client: Client = create_client(self.supabase_url, self.supabase_key)
+        if self.supabase_url and self.supabase_key:
+            try:
+                self.client = create_client(self.supabase_url, self.supabase_key)
+                self.enabled = True
+                logger.info("Supabase storage service initialized successfully")
+            except Exception as e:
+                logger.error(f"Failed to initialize Supabase client: {e}")
+                self.enabled = False
+        else:
+            logger.warning("Supabase credentials not found. File uploads will be disabled.")
+            self.enabled = False
         
     async def upload_file(
         self, 
@@ -37,6 +46,12 @@ class SupabaseStorageService:
         Returns:
             str: Public URL of the uploaded file
         """
+        if not self.enabled or not self.client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Supabase storage is not available. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+            )
+        
         try:
             # Reset file pointer to beginning
             file_data.seek(0)
@@ -92,6 +107,10 @@ class SupabaseStorageService:
         Returns:
             bool: True if deletion was successful
         """
+        if not self.enabled or not self.client:
+            logger.warning("Supabase storage is not available for file deletion")
+            return False
+        
         try:
             response = self.client.storage.from_(self.bucket_name).remove([file_path])
             
@@ -117,6 +136,12 @@ class SupabaseStorageService:
         Returns:
             str: Signed URL for the file
         """
+        if not self.enabled or not self.client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Supabase storage is not available. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+            )
+        
         try:
             response = self.client.storage.from_(self.bucket_name).create_signed_url(
                 path=file_path,
