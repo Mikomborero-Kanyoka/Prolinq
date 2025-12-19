@@ -56,22 +56,35 @@ class SupabaseStorageService:
             # Reset file pointer to beginning
             file_data.seek(0)
             
-            # Upload file to Supabase
+            # Read file data for older Supabase version
+            file_content = file_data.read()
+            
+            # Upload file to Supabase (compatible with older versions)
             response = self.client.storage.from_(self.bucket_name).upload(
                 path=file_path,
-                file=file_data,
-                file_options={
-                    "content-type": content_type,
-                    "cache-control": "max-age=3600",  # Cache for 1 hour
-                    "upsert": "false"  # Don't overwrite existing files
-                }
+                file=file_content
             )
             
-            if response.data is None:
+            # Check for successful upload (handle different response formats)
+            if isinstance(response, dict):
+                if response.get('error'):
+                    logger.error(f"Supabase upload error: {response.get('error')}")
+                    raise HTTPException(
+                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        detail=f"Failed to upload file: {response.get('error')}"
+                    )
+                # Upload successful for dict response
+            elif hasattr(response, 'data') and response.data is None:
                 logger.error(f"Supabase upload failed: {response}")
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail=f"Failed to upload file: {response}"
+                )
+            elif hasattr(response, 'error') and response.error:
+                logger.error(f"Supabase upload error: {response.error}")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to upload file: {response.error}"
                 )
             
             # Generate signed URL for private access (valid for 1 hour)
@@ -80,15 +93,33 @@ class SupabaseStorageService:
                 expires_in=3600  # 1 hour
             )
             
-            if signed_response.data is None:
+            # Handle different response formats for signed URL
+            if isinstance(signed_response, dict):
+                if signed_response.get('error'):
+                    logger.error(f"Failed to create signed URL: {signed_response.get('error')}")
+                    raise HTTPException(
+                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        detail="Failed to generate access URL for uploaded file"
+                    )
+                signed_url = signed_response.get('signedURL')
+            elif hasattr(signed_response, 'data') and signed_response.data is None:
                 logger.error(f"Failed to create signed URL: {signed_response}")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Failed to generate access URL for uploaded file"
+                )
+            else:
+                signed_url = signed_response.data["signedURL"]
+            
+            if not signed_url:
+                logger.error(f"No signed URL returned: {signed_response}")
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail="Failed to generate access URL for uploaded file"
                 )
             
             logger.info(f"Successfully uploaded file to {file_path}")
-            return signed_response.data["signedURL"]
+            return signed_url
             
         except Exception as e:
             logger.error(f"Error uploading file to Supabase: {str(e)}")
@@ -114,9 +145,24 @@ class SupabaseStorageService:
         try:
             response = self.client.storage.from_(self.bucket_name).remove([file_path])
             
-            if response.data is None:
+            # Handle different response formats for deletion
+            if isinstance(response, dict):
+                if response.get('error'):
+                    logger.error(f"Failed to delete file {file_path}: {response.get('error')}")
+                    return False
+                # Deletion successful for dict response
+            elif hasattr(response, 'data') and response.data is None:
                 logger.error(f"Failed to delete file {file_path}: {response}")
                 return False
+            elif hasattr(response, 'error') and response.error:
+                logger.error(f"Failed to delete file {file_path}: {response.error}")
+                return False
+            else:
+                # Handle list response (some versions return list)
+                if isinstance(response, list) and len(response) > 0:
+                    if hasattr(response[0], 'error') and response[0].error:
+                        logger.error(f"Failed to delete file {file_path}: {response[0].error}")
+                        return False
             
             logger.info(f"Successfully deleted file: {file_path}")
             return True
@@ -148,14 +194,32 @@ class SupabaseStorageService:
                 expires_in=expires_in
             )
             
-            if response.data is None:
+            # Handle different response formats for signed URL
+            if isinstance(response, dict):
+                if response.get('error'):
+                    logger.error(f"Failed to create signed URL for {file_path}: {response.get('error')}")
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail="File not found or access denied"
+                    )
+                signed_url = response.get('signedURL')
+            elif hasattr(response, 'data') and response.data is None:
                 logger.error(f"Failed to create signed URL for {file_path}: {response}")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail="File not found or access denied"
                 )
+            else:
+                signed_url = response.data["signedURL"]
             
-            return response.data["signedURL"]
+            if not signed_url:
+                logger.error(f"No signed URL returned for {file_path}: {response}")
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="File not found or access denied"
+                )
+            
+            return signed_url
             
         except Exception as e:
             logger.error(f"Error creating signed URL: {str(e)}")
