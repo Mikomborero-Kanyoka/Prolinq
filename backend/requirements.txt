@@ -14,3 +14,4 @@ numpy
 python-socketio[asyncio_client]
 APScheduler
 psycopg2-binary
+supabase
