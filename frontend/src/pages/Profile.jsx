@@ -102,8 +102,11 @@ const Profile = () => {
       
       const response = await uploadAPI.uploadPhoto(formData, 'profile')
       console.log('📸 Upload response:', response.data)
+      console.log('🔗 URL to save:', response.data.url)
       try {
-        const updateResponse = await api.put('/users/me', { profile_photo: response.data.url })
+        const updatePayload = { profile_photo: response.data.url }
+        console.log('📤 Sending to PUT:', updatePayload)
+        const updateResponse = await api.put('/users/me', updatePayload)
         console.log('✅ User update response:', updateResponse.data)
         updateUser(updateResponse.data)
         toast.success('Profile photo uploaded!')
