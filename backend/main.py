@@ -115,7 +115,7 @@ app.include_router(advertisements.router)
 app.include_router(skills_matching.router)
 app.include_router(job_recommendations.router)
 app.include_router(email.router)
-app.include_router(uploads.router)
+app.include_router(uploads.router, prefix="/api")
 
 # Startup and shutdown events
 @app.on_event("startup")
