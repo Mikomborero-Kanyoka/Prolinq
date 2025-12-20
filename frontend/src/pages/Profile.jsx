@@ -101,7 +101,8 @@ const Profile = () => {
       formData.append('file', file)
       
       const response = await uploadAPI.uploadPhoto(formData, 'profile')
-      updateUser(response.data.user)
+      const updateResponse = await api.put('/users/me', { profile_photo: response.data.url })
+      updateUser(updateResponse.data)
       toast.success('Profile photo uploaded!')
     } catch (error) {
       console.error('Photo upload error:', error.response?.data)
@@ -127,7 +128,8 @@ const Profile = () => {
       formData.append('file', file)
       
       const response = await uploadAPI.uploadCoverPhoto(formData)
-      updateUser(response.data.user)
+      const updateResponse = await api.put('/users/me', { cover_photo: response.data.url })
+      updateUser(updateResponse.data)
       toast.success('Cover image uploaded!')
     } catch (error) {
       console.error('Cover upload error:', error.response?.data)
@@ -251,7 +253,7 @@ const Profile = () => {
     }
 
     if (user?.profile_photo) {
-      const imageUrl = `/uploads/${user.profile_photo}?t=${Date.now()}`
+      const imageUrl = user.profile_photo.startsWith('http') ? user.profile_photo : `/uploads/${user.profile_photo}?t=${Date.now()}`
       return (
         <div className="relative group">
           <img
@@ -451,7 +453,7 @@ const Profile = () => {
         <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600">
           {user?.cover_image ? (
             <img
-              src={`/uploads/${user.cover_image}?t=${Date.now()}`}
+              src={user.cover_image.startsWith('http') ? user.cover_image : `/uploads/${user.cover_image}?t=${Date.now()}`}
               alt="Cover"
               className="w-full h-full object-cover"
             />
@@ -803,7 +805,7 @@ const Profile = () => {
         <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600">
           {user?.cover_image ? (
             <img
-              src={`/uploads/${user.cover_image}?t=${Date.now()}`}
+              src={user.cover_image.startsWith('http') ? user.cover_image : `/uploads/${user.cover_image}?t=${Date.now()}`}
               alt="Cover"
               className="w-full h-full object-cover"
             />
