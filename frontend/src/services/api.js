@@ -199,4 +199,24 @@ export const adminAPI = {
   getAdminUnreadCount: () => api.get('/messages/admin/unread/count'),
 };
 
+// Upload endpoints
+export const uploadAPI = {
+  uploadPhoto: (formData) => api.post('/uploads/supabase', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  uploadCoverPhoto: (formData) => api.post('/uploads/supabase', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  uploadAdvertisement: (formData) => api.post('/uploads/supabase', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  uploadPortfolio: (formData) => api.post('/uploads/supabase', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  getFileUrl: (filePath, expiresIn = 3600) => api.get(`/uploads/get-url/${encodeURIComponent(filePath)}`, {
+    params: { expires_in: expiresIn }
+  }),
+  deleteFile: (filePath) => api.delete(`/uploads/delete/${encodeURIComponent(filePath)}`)
+};
+
 export default api;

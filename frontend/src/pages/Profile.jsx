@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import api from '../services/api'
+import api, { uploadAPI } from '../services/api'
 import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { 
@@ -95,12 +95,10 @@ const Profile = () => {
     }
 
     setUploadingPhoto(true)
-    const formData = new FormData()
-    formData.append('file', file)
 
     try {
-      const response = await api.post('/uploads/upload-photo', formData)
-      updateUser(response.data.user)
+      const response = await uploadAPI.uploadProfilePhoto(file)
+      updateUser(response.user)
       toast.success('Profile photo uploaded!')
     } catch (error) {
       toast.error('Failed to upload photo')
@@ -119,12 +117,10 @@ const Profile = () => {
     }
 
     setUploadingCover(true)
-    const formData = new FormData()
-    formData.append('file', file)
 
     try {
-      const response = await api.post('/uploads/upload-cover', formData)
-      updateUser(response.data.user)
+      const response = await uploadAPI.uploadCoverImage(file)
+      updateUser(response.user)
       toast.success('Cover image uploaded!')
     } catch (error) {
       toast.error('Failed to upload cover image')
@@ -162,13 +158,9 @@ const Profile = () => {
     currentPreviews[index] = previewUrl
     updateUser({ ...user, portfolio_image_previews: currentPreviews })
 
-    const formData = new FormData()
-    formData.append('file', file)
-
     try {
-      const response = await api.post('/uploads/upload-portfolio', formData)
-      const userResponse = await api.get('/users/me')
-      updateUser(userResponse.data)
+      const response = await uploadAPI.uploadPortfolioImage(file)
+      updateUser(response.user)
       toast.success('Portfolio image uploaded!')
     } catch (error) {
       console.error('Portfolio upload error:', error.response?.data)
@@ -209,13 +201,9 @@ const Profile = () => {
     currentPreviews[index] = previewUrl
     updateUser({ ...user, resume_image_previews: currentPreviews })
 
-    const formData = new FormData()
-    formData.append('file', file)
-
     try {
-      const response = await api.post('/uploads/upload-portfolio', formData)
-      const userResponse = await api.get('/users/me')
-      updateUser(userResponse.data)
+      const response = await uploadAPI.uploadPortfolioImage(file)
+      updateUser(response.user)
       toast.success('Resume image uploaded!')
     } catch (error) {
       console.error('Resume upload error:', error.response?.data)

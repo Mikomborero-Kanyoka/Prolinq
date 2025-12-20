@@ -18,7 +18,7 @@ class AdvertisementService {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(`${this.baseURL}/upload-image`, {
+      const response = await fetch(`${this.apiBaseUrl}/api/uploads/supabase`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

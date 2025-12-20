@@ -108,7 +108,7 @@ const PictureAdForm = () => {
       const imageFormData = new FormData()
       imageFormData.append('file', image)
       
-      const uploadResponse = await api.post('/uploads/upload-advertisement', imageFormData, {
+      const uploadResponse = await api.post('/uploads/supabase', imageFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
