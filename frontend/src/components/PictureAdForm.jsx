@@ -104,16 +104,24 @@ const PictureAdForm = () => {
     setIsLoading(true)
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('cta_text', formData.cta_text)
-      uploadFormData.append('cta_url', formData.cta_url)
-      uploadFormData.append('file', image)
-
-      const response = await api.post('/advertisements/picture', uploadFormData, {
+      // First upload the image to Supabase
+      const imageFormData = new FormData()
+      imageFormData.append('file', image)
+      
+      const uploadResponse = await api.post('/uploads/upload-advertisement', imageFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
+
+      // Then create the advertisement with the uploaded image URL
+      const adData = {
+        cta_text: formData.cta_text,
+        cta_url: formData.cta_url,
+        image_url: uploadResponse.data.image_url
+      }
+
+      const response = await api.post('/advertisements/picture', adData)
 
       toast.success('Picture ad created successfully!')
       navigate('/advertisement-manager')

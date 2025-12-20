@@ -99,7 +99,7 @@ const Profile = () => {
     formData.append('file', file)
 
     try {
-      const response = await api.post('/users/me/upload-photo', formData)
+      const response = await api.post('/uploads/upload-photo', formData)
       updateUser(response.data.user)
       toast.success('Profile photo uploaded!')
     } catch (error) {
@@ -123,7 +123,7 @@ const Profile = () => {
     formData.append('file', file)
 
     try {
-      const response = await api.post('/users/me/upload-cover-image', formData)
+      const response = await api.post('/uploads/upload-cover', formData)
       updateUser(response.data.user)
       toast.success('Cover image uploaded!')
     } catch (error) {
@@ -166,7 +166,7 @@ const Profile = () => {
     formData.append('file', file)
 
     try {
-      const response = await api.post('/users/me/upload-portfolio-image', formData)
+      const response = await api.post('/uploads/upload-portfolio', formData)
       const userResponse = await api.get('/users/me')
       updateUser(userResponse.data)
       toast.success('Portfolio image uploaded!')
@@ -213,7 +213,7 @@ const Profile = () => {
     formData.append('file', file)
 
     try {
-      const response = await api.post('/users/me/upload-resume-image', formData)
+      const response = await api.post('/uploads/upload-portfolio', formData)
       const userResponse = await api.get('/users/me')
       updateUser(userResponse.data)
       toast.success('Resume image uploaded!')

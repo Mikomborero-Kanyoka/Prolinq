@@ -18,6 +18,11 @@ class AdvertisementCreateWithImage(AdvertisementCreate):
     image_filename: Optional[str] = None
     image_url: Optional[str] = None
 
+class PictureAdCreate(BaseModel):
+    cta_text: str
+    cta_url: str
+    image_url: str
+
 router = APIRouter(prefix="/api/advertisements", tags=["advertisements"])
 
 # Category color schemes for image generation
@@ -199,19 +204,17 @@ def get_ad_upload_dir():
     return upload_dir
 
 @router.post("/picture", response_model=AdvertisementResponse)
-async def create_picture_ad(
-    cta_text: str = Form(...),
-    cta_url: str = Form(...),
-    file: UploadFile = File(...),
+def create_picture_ad(
+    ad_data: PictureAdCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """
-    Create a picture-only advertisement with a CTA button.
+    Create a picture-only advertisement with a CTA button using Supabase image URL.
     Requires:
     - cta_text: Call-to-action button text (e.g., "Learn More", "Shop Now")
     - cta_url: External URL the button should link to
-    - file: Image file (jpg, png, gif, webp)
+    - image_url: Supabase storage URL for the uploaded image
     """
     
     # Check if user is admin
@@ -221,61 +224,28 @@ async def create_picture_ad(
             detail="Only admins can create picture ads"
         )
     
-    # Validate file type
-    allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
-    if file.content_type not in allowed_types:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only JPEG, PNG, GIF, and WebP images are allowed"
-        )
-    
     # Validate CTA text length
-    if len(cta_text.split()) > 3:
+    if len(ad_data.cta_text.split()) > 3:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="CTA text should be maximum 3 words"
         )
     
     # Validate CTA URL
-    if not cta_url.startswith(("http://", "https://")):
+    if not ad_data.cta_url.startswith(("http://", "https://")):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="CTA URL must start with http:// or https://"
         )
     
+    # Validate image URL
+    if not ad_data.image_url.startswith(("http://", "https://")):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Image URL must be a valid URL starting with http:// or https://"
+        )
+    
     try:
-        # Read and validate image
-        contents = await file.read()
-        
-        # Check file size (max 10MB)
-        max_size = 10 * 1024 * 1024
-        if len(contents) > max_size:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="File size must be less than 10MB"
-            )
-        
-        # Validate it's actually an image (without exhausting the file)
-        try:
-            img = Image.open(io.BytesIO(contents))
-            # Just check that it can be identified, don't verify() as it exhausts the file
-            img.load()
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid image file"
-            )
-        
-        # Generate unique filename
-        upload_dir = get_ad_upload_dir()
-        file_extension = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
-        unique_filename = f"ad_picture_{uuid.uuid4().hex}.{file_extension}"
-        file_path = os.path.join(upload_dir, unique_filename)
-        
-        # Save file
-        with open(file_path, "wb") as f:
-            f.write(contents)
-        
         # Create advertisement record as picture-only ad
         advertisement = Advertisement(
             user_id=current_user.id,
@@ -285,14 +255,14 @@ async def create_picture_ad(
             company_name=current_user.company_name or current_user.full_name or "Business",
             price=None,
             benefit="Promotional image advertisement",
-            cta_text=cta_text,
-            cta_url=cta_url,
+            cta_text=ad_data.cta_text,
+            cta_url=ad_data.cta_url,
             headline="",  # Picture-only ads don't need generated headline
             description="",  # Picture-only ads don't need generated description
             offer=None,
             is_picture_only=True,
-            picture_filename=unique_filename,
-            image_url=f"/uploads/{unique_filename}",
+            picture_filename=None,  # No local file storage
+            image_url=ad_data.image_url,  # Use Supabase URL directly
             status="active"  # Explicitly set status to active
         )
         
@@ -307,7 +277,7 @@ async def create_picture_ad(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Failed to process image: {str(e)}"
+            detail=f"Failed to create picture advertisement: {str(e)}"
         )
 
 @router.post("/upload-image")
@@ -359,7 +329,7 @@ def upload_advertisement_image(
         except Exception as e:
             print(f"Error optimizing image: {e}")
         
-        image_url = f"/uploads/{filename}"
+        image_url = f"/files/{filename}"
         
         return {
             "message": "Image uploaded successfully",
@@ -427,7 +397,6 @@ def create_advertisement(
     current_user: User = Depends(get_current_user)
 ):
     """Create a new advertisement"""
-    
     # Validate input
     if len(ad_data.name.split()) > 6:
         raise HTTPException(
@@ -447,7 +416,7 @@ def create_advertisement(
     # Generate image
     try:
         image_filename = generate_advertisement_image(ad_data, text_data)
-        image_url = f"/uploads/{image_filename}"
+        image_url = f"/files/{image_filename}"
     except Exception as e:
         print(f"Error generating image: {e}")
         image_filename = None
@@ -602,7 +571,7 @@ def update_advertisement(
             # Generate new image
             image_filename = generate_advertisement_image(updated_ad_data, text_data)
             advertisement.image_filename = image_filename
-            advertisement.image_url = f"/uploads/{image_filename}"
+            advertisement.image_url = f"/files/{image_filename}"
         except Exception as e:
             print(f"Error regenerating image: {e}")
     else:

@@ -65,7 +65,7 @@ app = FastAPI(
 # Mount uploads directory for serving static files
 uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(uploads_dir, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+app.mount("/files", StaticFiles(directory=uploads_dir), name="uploads")
 
 # HTTPS enforcement middleware for Railway
 @app.middleware("http")
@@ -176,7 +176,7 @@ async def connect(sid, environ, auth=None):
 
 @sio.event
 async def disconnect(sid):
-    print(f"� Client disconnected: {sid}")
+    print(f"🔌 Client disconnected: {sid}")
 
 @sio.event
 async def new_message(data):
@@ -195,7 +195,7 @@ async def notification(data):
     """Broadcast notification to specific user"""
     user_id = data.get('user_id')
     if user_id:
-        print(f"� Sending notification to user {user_id}: {data}")
+        print(f"🔔 Sending notification to user {user_id}: {data}")
         await sio.emit('notification', data, room=f"user_{user_id}")
     else:
         print(f"📢 Broadcasting notification to all: {data}")

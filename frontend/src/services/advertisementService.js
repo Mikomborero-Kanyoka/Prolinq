@@ -78,6 +78,26 @@ class AdvertisementService {
     }
   }
 
+  async createPictureAd(pictureAdData) {
+    try {
+      const response = await fetch(`${this.baseURL}/picture`, {
+        method: 'POST',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify(pictureAdData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to create picture advertisement');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating picture advertisement:', error);
+      throw error;
+    }
+  }
+
   async getUserAdvertisements(params = {}) {
     try {
       const queryParams = new URLSearchParams();
