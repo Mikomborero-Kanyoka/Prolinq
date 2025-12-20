@@ -101,9 +101,16 @@ const Profile = () => {
       formData.append('file', file)
       
       const response = await uploadAPI.uploadPhoto(formData, 'profile')
-      const updateResponse = await api.put('/users/me', { profile_photo: response.data.url })
-      updateUser(updateResponse.data)
-      toast.success('Profile photo uploaded!')
+      console.log('📸 Upload response:', response.data)
+      try {
+        const updateResponse = await api.put('/users/me', { profile_photo: response.data.url })
+        console.log('✅ User update response:', updateResponse.data)
+        updateUser(updateResponse.data)
+        toast.success('Profile photo uploaded!')
+      } catch (updateError) {
+        console.error('❌ Update failed:', updateError.response?.status, updateError.response?.data)
+        toast.error('Photo uploaded but failed to save. Try refreshing.')
+      }
     } catch (error) {
       console.error('Photo upload error:', error.response?.data)
       toast.error('Failed to upload photo')
@@ -128,9 +135,16 @@ const Profile = () => {
       formData.append('file', file)
       
       const response = await uploadAPI.uploadCoverPhoto(formData)
-      const updateResponse = await api.put('/users/me', { cover_photo: response.data.url })
-      updateUser(updateResponse.data)
-      toast.success('Cover image uploaded!')
+      console.log('🖼️ Cover upload response:', response.data)
+      try {
+        const updateResponse = await api.put('/users/me', { cover_photo: response.data.url })
+        console.log('✅ Cover update response:', updateResponse.data)
+        updateUser(updateResponse.data)
+        toast.success('Cover image uploaded!')
+      } catch (updateError) {
+        console.error('❌ Cover update failed:', updateError.response?.status, updateError.response?.data)
+        toast.error('Cover uploaded but failed to save. Try refreshing.')
+      }
     } catch (error) {
       console.error('Cover upload error:', error.response?.data)
       toast.error('Failed to upload cover image')
