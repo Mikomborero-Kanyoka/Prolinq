@@ -12,6 +12,78 @@ from models import User
 
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 
+@router.post("/supabase")
+async def upload_to_supabase(
+    file: UploadFile = File(...),
+    folder: Optional[str] = "general",
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Generic upload endpoint for Supabase storage
+    Supports profile photos, cover photos, advertisement images, and portfolio files
+    """
+    try:
+        # Validate file type
+        allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+        if folder == "portfolio":
+            allowed_types.extend([
+                "application/pdf", 
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            ])
+        
+        if file.content_type not in allowed_types:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid file type. Allowed types: {', '.join(allowed_types)}"
+            )
+        
+        # Validate file size (15MB max for portfolio, 10MB for others)
+        max_size = 15 * 1024 * 1024 if folder == "portfolio" else 10 * 1024 * 1024
+        file.file.seek(0, 2)  # Seek to end
+        file_size = file.file.tell()
+        file.file.seek(0)  # Reset to beginning
+        
+        if file_size > max_size:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"File too large. Maximum size is {max_size // (1024*1024)}MB."
+            )
+        
+        # Generate unique file path
+        file_path = supabase_storage.generate_file_path(
+            folder=folder or "general",
+            user_id=str(current_user.id),
+            filename=file.filename or "unknown.jpg"
+        )
+        
+        # Upload to Supabase
+        signed_url = await supabase_storage.upload_file(
+            file_data=file.file,
+            file_path=file_path,
+            content_type=file.content_type,
+            user_id=str(current_user.id)
+        )
+        
+        return {
+            "message": "File uploaded successfully",
+            "url": signed_url,
+            "file_path": file_path,
+            "filename": file.filename,
+            "content_type": file.content_type,
+            "size": file_size,
+            "folder": folder
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload file: {str(e)}"
+        )
+
 @router.post("/upload-photo")
 async def upload_photo(
     file: UploadFile = File(...),

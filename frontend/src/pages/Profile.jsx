@@ -97,10 +97,15 @@ const Profile = () => {
     setUploadingPhoto(true)
 
     try {
-      const response = await uploadAPI.uploadProfilePhoto(file)
-      updateUser(response.user)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('file_type', 'profile_photo')
+      
+      const response = await uploadAPI.uploadPhoto(formData)
+      updateUser(response.data.user)
       toast.success('Profile photo uploaded!')
     } catch (error) {
+      console.error('Photo upload error:', error.response?.data)
       toast.error('Failed to upload photo')
     } finally {
       setUploadingPhoto(false)
@@ -119,10 +124,15 @@ const Profile = () => {
     setUploadingCover(true)
 
     try {
-      const response = await uploadAPI.uploadCoverImage(file)
-      updateUser(response.user)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('file_type', 'cover_image')
+      
+      const response = await uploadAPI.uploadPhoto(formData)
+      updateUser(response.data.user)
       toast.success('Cover image uploaded!')
     } catch (error) {
+      console.error('Cover upload error:', error.response?.data)
       toast.error('Failed to upload cover image')
     } finally {
       setUploadingCover(false)
@@ -159,8 +169,13 @@ const Profile = () => {
     updateUser({ ...user, portfolio_image_previews: currentPreviews })
 
     try {
-      const response = await uploadAPI.uploadPortfolioImage(file)
-      updateUser(response.user)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('file_type', 'portfolio_image')
+      formData.append('image_index', index.toString())
+      
+      const response = await uploadAPI.uploadPhoto(formData)
+      updateUser(response.data.user)
       toast.success('Portfolio image uploaded!')
     } catch (error) {
       console.error('Portfolio upload error:', error.response?.data)
@@ -202,8 +217,13 @@ const Profile = () => {
     updateUser({ ...user, resume_image_previews: currentPreviews })
 
     try {
-      const response = await uploadAPI.uploadPortfolioImage(file)
-      updateUser(response.user)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('file_type', 'resume_image')
+      formData.append('image_index', index.toString())
+      
+      const response = await uploadAPI.uploadPhoto(formData)
+      updateUser(response.data.user)
       toast.success('Resume image uploaded!')
     } catch (error) {
       console.error('Resume upload error:', error.response?.data)
