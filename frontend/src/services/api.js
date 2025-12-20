@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://prolinq-production.up.railway.app/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://prolinq-production.up.railway.app';
 
 console.log('🔧 [API Service] Environment:', import.meta.env.MODE);
 console.log('🔧 [API Service] VITE_API_URL:', import.meta.env.VITE_API_URL);
