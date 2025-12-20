@@ -99,9 +99,8 @@ const Profile = () => {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('file_type', 'profile_photo')
       
-      const response = await uploadAPI.uploadPhoto(formData)
+      const response = await uploadAPI.uploadPhoto(formData, 'profile')
       updateUser(response.data.user)
       toast.success('Profile photo uploaded!')
     } catch (error) {
@@ -126,9 +125,8 @@ const Profile = () => {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('file_type', 'cover_image')
       
-      const response = await uploadAPI.uploadPhoto(formData)
+      const response = await uploadAPI.uploadCoverPhoto(formData)
       updateUser(response.data.user)
       toast.success('Cover image uploaded!')
     } catch (error) {
@@ -171,10 +169,8 @@ const Profile = () => {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('file_type', 'portfolio_image')
-      formData.append('image_index', index.toString())
       
-      const response = await uploadAPI.uploadPhoto(formData)
+      const response = await uploadAPI.uploadPortfolio(formData)
       updateUser(response.data.user)
       toast.success('Portfolio image uploaded!')
     } catch (error) {
@@ -219,10 +215,8 @@ const Profile = () => {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('file_type', 'resume_image')
-      formData.append('image_index', index.toString())
       
-      const response = await uploadAPI.uploadPhoto(formData)
+      const response = await uploadAPI.uploadPortfolio(formData)
       updateUser(response.data.user)
       toast.success('Resume image uploaded!')
     } catch (error) {
