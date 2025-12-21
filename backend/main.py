@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 from database import Base, engine, get_db
-from routes import auth, jobs, users, applications, messages, profiles, notifications, job_completion, reviews, analytics, admin, advertisements, skills_matching, job_recommendations, email, uploads
+from routes import auth, jobs, users, applications, messages, profiles, notifications, job_completion, reviews, analytics, admin, advertisements, skills_matching, job_recommendations, email, uploads, public_images
 # Import all models to ensure they're registered with SQLAlchemy
 from models import User, Job, Application, Message, Review, Advertisement, EmailQueue, EmailAd, EmailMetrics
 
@@ -116,6 +116,7 @@ app.include_router(skills_matching.router)
 app.include_router(job_recommendations.router)
 app.include_router(email.router)
 app.include_router(uploads.router, prefix="/api")
+app.include_router(public_images.router, prefix="/api")
 
 # Startup and shutdown events
 @app.on_event("startup")

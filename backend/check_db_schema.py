@@ -1,24 +1,54 @@
+#!/usr/bin/env python3
+"""
+Check database schema to understand table structure
+"""
+
 import sqlite3
+import os
 
-conn = sqlite3.connect('prolinq.db')
-cursor = conn.cursor()
-cursor.execute("PRAGMA table_info(users)")
-columns = cursor.fetchall()
+def check_schema():
+    """Check the schema of all tables"""
+    
+    db_path = "prolinq.db"
+    
+    if not os.path.exists(db_path):
+        print("❌ Database file not found")
+        return
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        print("🔍 Checking database schema...")
+        print("=" * 60)
+        
+        # Get all table names
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        
+        for table_name, in tables:
+            print(f"\n📋 Table: {table_name}")
+            print("-" * 40)
+            
+            # Get table schema
+            cursor.execute(f"PRAGMA table_info({table_name});")
+            columns = cursor.fetchall()
+            
+            for col in columns:
+                col_id, name, type_name, not_null, default_val, pk = col
+                pk_str = " (PRIMARY KEY)" if pk else ""
+                null_str = " NOT NULL" if not_null else ""
+                default_str = f" DEFAULT {default_val}" if default_val else ""
+                
+                print(f"   {name}: {type_name}{null_str}{default_str}{pk_str}")
+        
+        conn.close()
+        
+        print("\n" + "=" * 60)
+        print("✅ Schema check completed!")
+        
+    except Exception as e:
+        print(f"❌ Error checking schema: {str(e)}")
 
-print("Current users table columns:")
-print("-" * 80)
-for col in columns:
-    cid, name, type_, notnull, dflt_value, pk = col
-    print(f"ID: {cid:2d} | Name: {name:20s} | Type: {type_:10s} | NotNull: {notnull} | PK: {pk}")
-
-conn.close()
-
-# Check for missing columns
-required_fields = ['professional_title', 'location', 'cover_image', 'company_name', 'company_email', 'company_cell', 'company_address']
-existing_fields = [col[1] for col in columns]
-missing = [f for f in required_fields if f not in existing_fields]
-
-if missing:
-    print(f"\n❌ Missing fields: {missing}")
-else:
-    print("\n✅ All required fields exist!")
+if __name__ == "__main__":
+    check_schema()

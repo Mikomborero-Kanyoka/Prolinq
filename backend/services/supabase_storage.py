@@ -249,6 +249,93 @@ class SupabaseStorageService:
         # Construct full path
         return f"{folder}/{user_id}/{unique_filename}"
     
+    def get_public_url(self, file_path: str) -> str:
+        """
+        Generate a public URL for accessing a file from Supabase storage
+        
+        Args:
+            file_path: Path within the bucket
+            
+        Returns:
+            str: Public URL for the file
+        """
+        if not self.enabled or not self.client:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Supabase storage is not available. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+            )
+        
+        try:
+            # Construct the public URL for Supabase storage
+            # Format: https://[PROJECT_REF].supabase.co/storage/v1/object/public/[BUCKET_NAME]/[FILE_PATH]
+            public_url = f"{self.supabase_url}/storage/v1/object/public/{self.bucket_name}/{file_path}"
+            
+            logger.info(f"Generated public URL for {file_path}")
+            return public_url
+            
+        except Exception as e:
+            logger.error(f"Error generating public URL: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate public URL: {str(e)}"
+            )
+    
+    def get_image_url(self, image_type: str, identifier: str, filename: str = None) -> str:
+        """
+        Get the public URL for an image based on actual folder structure
+        
+        Args:
+            image_type: Type of image ('profile', 'portfolio', 'job', 'advertisement')
+            identifier: User ID, job ID, or advertisement ID
+            filename: Specific filename (optional)
+            
+        Returns:
+            Public URL for the image
+        """
+        if not self.enabled:
+            return ""
+        
+        try:
+            # Construct the file path based on ACTUAL folder structure
+            if image_type == "profile":
+                # Profile pictures: profile/{user_id}/[filename]
+                if filename:
+                    file_path = f"profile/{identifier}/{filename}"
+                else:
+                    # Try common profile picture names
+                    file_path = f"profile/{identifier}/profile.jpg"
+            elif image_type == "portfolio":
+                # Portfolio pictures: portfolio/{user_id}/[filename]
+                if filename:
+                    file_path = f"portfolio/{identifier}/{filename}"
+                else:
+                    # Try common portfolio picture names
+                    file_path = f"portfolio/{identifier}/portfolio.jpg"
+            elif image_type == "job":
+                # Job photos: job-photos/job_{id}.jpg (assuming this structure exists)
+                if filename:
+                    file_path = f"job-photos/{filename}"
+                else:
+                    file_path = f"job-photos/job_{identifier}.jpg"
+            elif image_type == "advertisement":
+                # Advertisement photos: advertisement-photos/ad_{id}.jpg (assuming this structure exists)
+                if filename:
+                    file_path = f"advertisement-photos/{filename}"
+                else:
+                    file_path = f"advertisement-photos/ad_{identifier}.jpg"
+            else:
+                logger.warning(f"Unknown image type: {image_type}")
+                return ""
+            
+            # Get public URL
+            public_url = self.get_public_url(file_path)
+            logger.info(f"Generated {image_type} URL: {public_url}")
+            return public_url
+            
+        except Exception as e:
+            logger.error(f"Error getting {image_type} image URL: {e}")
+            return ""
+    
     def get_content_type(self, filename: str) -> str:
         """
         Determine content type based on file extension

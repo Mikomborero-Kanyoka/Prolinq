@@ -352,15 +352,71 @@ async def upload_portfolio_file(
             detail=f"Failed to upload portfolio file: {str(e)}"
         )
 
+@router.get("/get-url/{filename}")
+async def get_image_url_by_filename(
+    filename: str,
+    image_type: Optional[str] = None,
+    user_id: Optional[str] = None
+):
+    """
+    Get a public URL for an image by filename using the corrected path structure
+    This endpoint is used by frontend components to display profile pictures, portfolio images, etc.
+    
+    Args:
+        filename: The filename (can contain user_id and image_type info)
+        image_type: Optional image type (profile, portfolio, job, advertisement)
+        user_id: Optional user ID for profile/portfolio images
+    """
+    try:
+        # Try to extract image type and user ID from filename if not provided
+        if not image_type or not user_id:
+            # Parse filename patterns like:
+            # "profile_1.jpg", "portfolio_2.jpg", "job_123.jpg", "ad_456.jpg"
+            if filename.startswith("profile_"):
+                image_type = "profile"
+                user_id = filename.replace("profile_", "").replace(".jpg", "")
+            elif filename.startswith("portfolio_"):
+                image_type = "portfolio" 
+                user_id = filename.replace("portfolio_", "").replace(".jpg", "")
+            elif filename.startswith("job_"):
+                image_type = "job"
+                user_id = filename.replace("job_", "").replace(".jpg", "")
+            elif filename.startswith("ad_"):
+                image_type = "advertisement"
+                user_id = filename.replace("ad_", "").replace(".jpg", "")
+            else:
+                # Default to profile if we can't determine
+                image_type = "profile"
+                user_id = "1"
+        
+        # Use the corrected get_image_url function
+        image_url = supabase_storage.get_image_url(
+            image_type=image_type,
+            identifier=user_id,
+            filename=filename if not filename.startswith(("profile_", "portfolio_", "job_", "ad_")) else filename
+        )
+        
+        return {
+            "url": image_url,
+            "filename": filename,
+            "image_type": image_type,
+            "user_id": user_id
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate image URL: {str(e)}"
+        )
+
 @router.get("/get-url/{file_path:path}")
 async def get_file_url(
     file_path: str,
     expires_in: int = 3600,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Get a signed URL for accessing a file from Supabase storage
+    Get a signed URL for accessing a file from Supabase storage (public access)
     """
     try:
         signed_url = await supabase_storage.get_signed_url(
@@ -380,6 +436,32 @@ async def get_file_url(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate file URL: {str(e)}"
+        )
+
+@router.get("/public-url/{file_path:path}")
+async def get_public_file_url(
+    file_path: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Get a public URL for accessing a file from Supabase storage (no authentication required)
+    This is used for profile photos and other publicly accessible images
+    """
+    try:
+        # Get the public URL directly from Supabase
+        public_url = supabase_storage.get_public_url(file_path=file_path)
+        
+        return {
+            "url": public_url,
+            "file_path": file_path
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate public file URL: {str(e)}"
         )
 
 @router.delete("/delete/{file_path:path}")
